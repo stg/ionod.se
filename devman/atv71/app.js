@@ -460,28 +460,45 @@ function scalingMeta(row) {
   };
 }
 
+function isDevmanTransport(transport) {
+  const config = window.REPLICA_STATIC_CONFIG || null;
+  const loginUrl = String(config?.loginUrl || "").trim();
+  return transport.mode === "raw_ws" && loginUrl === "../index.html";
+}
+
 function formatTransportMeta(transport) {
-  const unitText = `unit ${transport.unit_id}`;
+  const displayUser = String(transport.display_user || "").trim();
   const rawUrl = String(transport.raw_url || transport.ionod || "").trim();
   const target = String(transport.target || "").trim();
-  if (rawUrl && target) {
+  if (isDevmanTransport(transport) && rawUrl && target) {
     try {
       const parsed = new URL(rawUrl);
       const host = parsed.host;
       const endpointTarget = parsed.searchParams.get("id") || target;
       if (host && /\.ionod\.se$/i.test(host) && endpointTarget) {
         const node = host.replace(/\.ionod\.se$/i, "");
-        return `${node} ${endpointTarget} ${unitText}`;
+        return [node, displayUser, endpointTarget].filter(Boolean).join(" ");
       }
     } catch (_error) {
       // fall back to generic label below
     }
   }
+  const unitText = `unit ${transport.unit_id}`;
   return `${transport.mode} ${unitText}`;
 }
 
 function formatTransportModeSummary(transport) {
+  const displayUser = String(transport.display_user || "").trim();
   const rawUrl = String(transport.raw_url || transport.ionod || "").trim();
+  const target = String(transport.target || "").trim();
+  if (isDevmanTransport(transport) && rawUrl) {
+    try {
+      const parsed = new URL(String(transport.raw_base_url || rawUrl));
+      return [parsed.host, displayUser, target].filter(Boolean).join(" ");
+    } catch (_error) {
+      return [rawUrl, displayUser, target].filter(Boolean).join(" ");
+    }
+  }
   if (rawUrl) {
     return rawUrl;
   }

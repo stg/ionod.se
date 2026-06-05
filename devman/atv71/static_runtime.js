@@ -41,6 +41,10 @@
     return requireSearchParam("target");
   }
 
+  function staticUser() {
+    return new URLSearchParams(window.location.search).get("user") || "";
+  }
+
   function staticUnitId() {
     const raw = new URLSearchParams(window.location.search).get("unit");
     if (!raw) {
@@ -544,6 +548,7 @@
         ionod: staticRawUrl(),
         target: staticTarget(),
         display_host: new URL(base).host,
+        display_user: staticUser(),
         mode: "raw_ws",
         tcp_port: 502,
         proxy_command: "browser-websocket",

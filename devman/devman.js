@@ -2,6 +2,7 @@ const state = {
   registry: null,
   supportedTypes: new Map(),
   currentBaseUrl: "",
+  currentUsername: "",
 };
 
 function $(id) {
@@ -61,6 +62,7 @@ function endpointPath(endpoint) {
     base: state.currentBaseUrl,
     target: endpoint.id,
     unit: String(unit),
+    user: state.currentUsername,
   });
   return `./${definition.path}?${params.toString()}`;
 }
@@ -86,8 +88,8 @@ function renderResults(endpoints) {
         <div class="muted">${definition ? definition.title : descriptor}</div>
       </div>
       <div class="endpoint-meta">
-        <span class="pill">${descriptor}</span>
-        <span class="pill">raw</span>
+        <span class="pill">${family}</span>
+        <span class="pill">${protocol || "unknown"}</span>
       </div>
       <div>
         <a href="${href}"><button type="button">Open ${definition ? definition.title : descriptor}</button></a>
@@ -103,6 +105,7 @@ async function loginAndLoadEndpoints(event) {
   const password = $("passwordInput").value;
   try {
     state.currentBaseUrl = normalizeBaseUrl(address);
+    state.currentUsername = username;
     window.localStorage.setItem("ionod.devman.address", state.currentBaseUrl);
     window.localStorage.setItem("ionod.devman.username", username);
     setStatus(`Logging into ${state.currentBaseUrl} ...`);
@@ -150,6 +153,7 @@ async function main() {
   $("loginForm").addEventListener("submit", loginAndLoadEndpoints);
   $("addressInput").value = window.localStorage.getItem("ionod.devman.address") || "";
   $("usernameInput").value = window.localStorage.getItem("ionod.devman.username") || "";
+  state.currentUsername = $("usernameInput").value.trim();
   setStatus(`Supported devices: ${(state.registry.supportedDevices || []).map(item => item.device).join(", ")}`);
 }
 
