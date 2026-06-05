@@ -6,6 +6,13 @@
       "title": "Altivar 71",
       "path": "atv71/",
       "defaultUnitId": 0
+    },
+    {
+      "device": "atv630",
+      "protocol": "modbus",
+      "title": "Altivar Process 630",
+      "path": "atv630/",
+      "defaultUnitId": 0
     }
   ]
 }
