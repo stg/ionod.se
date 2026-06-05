@@ -21,7 +21,6 @@ body{min-height:100vh}
 .panel-alt{background:linear-gradient(180deg,var(--panel-alt) 0,#fffdf8 100%)}
 .eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;color:var(--brand-dark)}
 h1,h2{font-family:var(--font-display);margin:.2rem 0 .6rem}
-.lead{color:var(--muted);max-width:40rem}
 .stack{display:grid;gap:14px;margin-top:18px}
 label{display:grid;gap:6px;font-weight:700}
 input{padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit}

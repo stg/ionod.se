@@ -69,7 +69,7 @@ function renderResults(endpoints) {
   const node = $("results");
   if (!endpoints.length) {
     node.className = "results empty";
-    node.innerHTML = "<p>No supported raw endpoints were returned for this user.</p>";
+    node.innerHTML = "<p>No available devices.</p>";
     return;
   }
   node.className = "results";
@@ -136,7 +136,7 @@ async function loginAndLoadEndpoints(event) {
           device: String(target.device || ""),
         }))
       : [];
-    $("resultsTitle").textContent = `${new URL(state.currentBaseUrl).host} supported endpoints`;
+    $("resultsTitle").textContent = `${new URL(state.currentBaseUrl).host}:${username}`;
     renderResults(supported);
     setStatus(`Loaded ${supported.length} supported endpoint${supported.length === 1 ? "" : "s"}.`);
   } catch (error) {

@@ -3,19 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ionod Devman</title>
+  <title>ionod device manager</title>
   <link rel="stylesheet" href="./devman.css">
 </head>
 <body>
   <main class="shell">
     <section class="panel">
-      <div class="eyebrow">ionod devman</div>
-      <h1>Remote device console</h1>
-      <p class="lead">Log into an ionod node, inspect the raw endpoints it exposes, and open a supported device UI directly in the browser.</p>
+      <div class="eyebrow">ionod device manager</div>
       <form id="loginForm" class="stack">
         <label>
-          <span>Address</span>
-          <input id="addressInput" name="address" type="text" placeholder="pumpdemo.ionod.se" autocomplete="url" required>
+          <span>Hostname</span>
+          <input id="addressInput" name="address" type="text" autocomplete="url" required>
         </label>
         <label>
           <span>Username</span>
@@ -25,7 +23,7 @@
           <span>Password</span>
           <input id="passwordInput" name="password" type="password" autocomplete="current-password" required>
         </label>
-        <button id="loginButton" type="submit">Log in and list supported endpoints</button>
+        <button id="loginButton" type="submit">Access</button>
       </form>
       <div id="status" class="status"></div>
     </section>
@@ -33,12 +31,12 @@
     <section class="panel panel-alt">
       <div class="section-head">
         <div>
-          <div class="eyebrow">Supported endpoints</div>
+          <div class="eyebrow">Devices</div>
           <h2 id="resultsTitle">Sign in to a node</h2>
         </div>
       </div>
       <div id="results" class="results empty">
-        <p>Only supported devices compiled into this static build are shown here.</p>
+        <p>No available devices.</p>
       </div>
     </section>
   </main>
