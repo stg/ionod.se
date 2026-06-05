@@ -1,0 +1,38 @@
+:root{
+  --bg:#f2ede5;
+  --panel:#fffdf8;
+  --panel-alt:#f7efe2;
+  --line:#d8ccb8;
+  --line-strong:#c6b498;
+  --text:#201810;
+  --muted:#6a5d4c;
+  --brand:#0f8a4c;
+  --brand-dark:#0b6a39;
+  --danger:#9d2828;
+  --font-display:"Bahnschrift SemiBold","Segoe UI Semibold","Segoe UI",sans-serif;
+  --font-body:"Aptos","Segoe UI",sans-serif;
+  --shadow:0 16px 40px rgba(42,28,13,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#f7f1e6 0,#efe7d8 52%,#e7ddcc 100%);color:var(--text);font-family:var(--font-body)}
+body{min-height:100vh}
+.shell{display:grid;grid-template-columns:minmax(320px,420px) minmax(320px,1fr);gap:24px;max-width:1280px;margin:0 auto;padding:28px}
+.panel{background:linear-gradient(180deg,var(--panel) 0,#fbf5ea 100%);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:var(--shadow)}
+.panel-alt{background:linear-gradient(180deg,var(--panel-alt) 0,#fffdf8 100%)}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.72rem;color:var(--brand-dark)}
+h1,h2{font-family:var(--font-display);margin:.2rem 0 .6rem}
+.lead{color:var(--muted);max-width:40rem}
+.stack{display:grid;gap:14px;margin-top:18px}
+label{display:grid;gap:6px;font-weight:700}
+input{padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit}
+button{border:0;border-radius:12px;padding:11px 16px;background:linear-gradient(180deg,var(--brand) 0,var(--brand-dark) 100%);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+button.secondary{background:linear-gradient(180deg,#f3ebde 0,#e9ddca 100%);color:var(--text);border:1px solid var(--line);box-shadow:none}
+.status{min-height:24px;margin-top:14px;color:var(--muted)}
+.status.error{color:var(--danger)}
+.results.empty{color:var(--muted)}
+.endpoint-list{display:grid;gap:12px}
+.endpoint-card{display:grid;gap:8px;padding:16px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.72)}
+.endpoint-meta{display:flex;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;background:#dff0df;color:var(--brand-dark);font-size:.85rem;font-weight:700}
+.muted{color:var(--muted)}
+@media (max-width: 960px){.shell{grid-template-columns:1fr;padding:18px}}
