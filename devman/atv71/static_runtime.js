@@ -484,13 +484,13 @@
         count & 0xff,
       ]);
       const response = await this.request(3, body);
-      const byteCount = response[1];
-      if (response[0] !== 3 || byteCount !== count * 2) {
+      const byteCount = response[0];
+      if (byteCount !== count * 2) {
         throw new Error(`Unexpected Modbus read response length ${byteCount}`);
       }
       const words = [];
       for (let index = 0; index < count; index += 1) {
-        const offset = 2 + (index * 2);
+        const offset = 1 + (index * 2);
         words.push((response[offset] << 8) | response[offset + 1]);
       }
       return words;
