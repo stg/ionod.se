@@ -645,6 +645,20 @@
       if (options.writableOnly) {
         items = items.filter((item) => item.writable);
       }
+      items.sort((left, right) => {
+        if (left.block !== right.block) {
+          return String(left.block || "").localeCompare(String(right.block || ""));
+        }
+        if (left.subgroup !== right.subgroup) {
+          return String(left.subgroup || "").localeCompare(String(right.subgroup || ""));
+        }
+        const leftAddress = Number(left.address);
+        const rightAddress = Number(right.address);
+        if (leftAddress !== rightAddress) {
+          return leftAddress - rightAddress;
+        }
+        return String(left.code || "").localeCompare(String(right.code || ""));
+      });
       return { ok: true, total: items.length, items };
     },
     async loadValues(state, codes) {
