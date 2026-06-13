@@ -649,9 +649,9 @@
             "id": "pid_regulation",
             "title": "PID Regulation",
             "description": "Feedback assignment, scaling, gains, PID references, offsets, limits, and closed-loop behavior.",
-            "count": 26,
-            "readableCount": 26,
-            "writableCount": 26,
+            "count": 28,
+            "readableCount": 28,
+            "writableCount": 28,
             "sampleCodes": [
               "TLS",
               "PIF",
@@ -660,29 +660,30 @@
               "PIP1",
               "PIP2",
               "PII",
-              "RPI"
+              "PR2"
             ],
             "menus": [
               "[PID REGULATOR] (PId-)",
               "[PID PRESET REFERENCES] (PrI-)",
-              "[MONITORING] (SUP-)"
+              "[MONITORING] (SUP-)",
+              "[PDO3 IMAGE] (P03-)"
             ],
             "subgroups": [
               {
                 "id": "activation_feedback",
                 "title": "Activation and feedback",
                 "description": "",
-                "count": 8,
-                "readableCount": 8,
-                "writableCount": 8
+                "count": 7,
+                "readableCount": 7,
+                "writableCount": 7
               },
               {
                 "id": "preset_references",
                 "title": "Preset references",
                 "description": "",
-                "count": 3,
-                "readableCount": 3,
-                "writableCount": 3
+                "count": 6,
+                "readableCount": 6,
+                "writableCount": 6
               },
               {
                 "id": "loop_tuning",
@@ -1541,9 +1542,9 @@
             "id": "general_settings",
             "title": "General Settings and Thresholds",
             "description": "Remaining ATV71 settings, thresholds, and auxiliary controls that do not belong to a narrower function family.",
-            "count": 38,
-            "readableCount": 38,
-            "writableCount": 23,
+            "count": 37,
+            "readableCount": 37,
+            "writableCount": 22,
             "sampleCodes": [
               "FRHT",
               "MMFQ",
@@ -1624,9 +1625,9 @@
                 "id": "supplemental_references",
                 "title": "Supplemental references",
                 "description": "",
-                "count": 4,
-                "readableCount": 4,
-                "writableCount": 4
+                "count": 3,
+                "readableCount": 3,
+                "writableCount": 3
               }
             ],
             "subgroupCount": 9
@@ -1637,9 +1638,9 @@
             "id": "communication_maps",
             "title": "Communication Maps",
             "description": "Command/status word maps, scanner images, and mapped addresses used by PLCs and higher-level controllers.",
-            "count": 37,
-            "readableCount": 37,
-            "writableCount": 18,
+            "count": 36,
+            "readableCount": 36,
+            "writableCount": 17,
             "sampleCodes": [
               "ETA",
               "FRH",
@@ -1703,9 +1704,9 @@
                 "id": "canopen_pdo_images",
                 "title": "CANopen and PDO images",
                 "description": "",
-                "count": 2,
-                "readableCount": 2,
-                "writableCount": 1
+                "count": 1,
+                "readableCount": 1,
+                "writableCount": 0
               }
             ],
             "subgroupCount": 6
@@ -58331,8 +58332,8 @@
       "max_hint": 32767.0,
       "block": "pid_regulation",
       "blockTitle": "PID Regulation",
-      "subgroup": "activation_feedback",
-      "subgroupTitle": "Activation and feedback",
+      "subgroup": "preset_references",
+      "subgroupTitle": "Preset references",
       "subgroupDescription": "",
       "explanation": "",
       "notes": []
@@ -58356,10 +58357,10 @@
       "enum": [],
       "min_hint": 0.0,
       "max_hint": 32767.0,
-      "block": "general_settings",
-      "blockTitle": "General Settings and Thresholds",
-      "subgroup": "supplemental_references",
-      "subgroupTitle": "Supplemental references",
+      "block": "pid_regulation",
+      "blockTitle": "PID Regulation",
+      "subgroup": "preset_references",
+      "subgroupTitle": "Preset references",
       "subgroupDescription": "",
       "explanation": "",
       "notes": []
@@ -58385,10 +58386,10 @@
       "enum": [],
       "min_hint": 0.0,
       "max_hint": 32767.0,
-      "block": "communication_maps",
-      "blockTitle": "Communication Maps",
-      "subgroup": "canopen_pdo_images",
-      "subgroupTitle": "CANopen and PDO images",
+      "block": "pid_regulation",
+      "blockTitle": "PID Regulation",
+      "subgroup": "preset_references",
+      "subgroupTitle": "Preset references",
       "subgroupDescription": "",
       "explanation": "",
       "notes": []
