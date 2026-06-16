@@ -377,7 +377,7 @@ table{width:100%;border-collapse:collapse}
 
 .register-grid{
   width:100%;
-  min-width:max-content;
+  min-width:100%;
 }
 
 .register-grid-row{
@@ -390,7 +390,7 @@ table{width:100%;border-collapse:collapse}
     minmax(max-content, 2fr)
     minmax(max-content, 2fr)
     minmax(14rem, 3fr);
-  min-width:max-content;
+  min-width:100%;
 }
 
 .register-grid-cell{
