@@ -327,26 +327,22 @@ function renderBlockCards(blocks, activeId, actionLabel = "Open block") {
 
 function parameterBlockRow(row) {
   return `
-    <tr class="table-section-row block-section-row">
-      <td colspan="7">
-        <div class="table-section-copy">
-          <strong>${esc(row.blockTitle)}</strong>
-        </div>
-      </td>
-    </tr>
+    <div class="register-grid-section block-section-row">
+      <div class="table-section-copy">
+        <strong>${esc(row.blockTitle)}</strong>
+      </div>
+    </div>
   `;
 }
 
 function parameterSubgroupRow(row) {
   return `
-    <tr class="table-section-row subgroup-section-row">
-      <td colspan="7">
-        <div class="table-section-copy">
-          <strong>${esc(row.subgroupTitle)}</strong>
-          ${row.subgroupDescription ? `<div class="small dim">${esc(row.subgroupDescription)}</div>` : ""}
-        </div>
-      </td>
-    </tr>
+    <div class="register-grid-section subgroup-section-row">
+      <div class="table-section-copy">
+        <strong>${esc(row.subgroupTitle)}</strong>
+        ${row.subgroupDescription ? `<div class="small dim">${esc(row.subgroupDescription)}</div>` : ""}
+      </div>
+    </div>
   `;
 }
 
@@ -464,7 +460,7 @@ function renderMonitoring() {
           </div>
         </div>
         <div class="table-wrap compact-table">
-          <table class="register-table">
+          <table>
             <thead><tr><th>Code</th><th>Address</th><th>Value</th><th>Raw</th><th>Label</th></tr></thead>
             <tbody>${renderMonitorTableRows(values)}</tbody>
           </table>
@@ -507,7 +503,7 @@ function modelMetaRow(label, value) {
   if (!value) {
     return "";
   }
-  return `<div class="small dim"><span class="model-label">${esc(label)}:</span> ${esc(value)}</div>`;
+  return `<div class="small dim model-meta-line"><span class="model-label">${esc(label)}:</span> ${esc(value)}</div>`;
 }
 
 function displayUnits(units) {
@@ -635,22 +631,22 @@ function parameterRow(row) {
     }
   }
   return `
-    <tr>
-      <td class="monospace col-code-cell">${esc(row.code)}</td>
-      <td class="col-address-cell">${row.address}</td>
-      <td class="col-access-cell">${esc(accessMeta(row))}</td>
-      <td class="col-name-cell">
+    <div class="register-grid-row">
+      <div class="register-grid-cell monospace col-code-cell">${esc(row.code)}</div>
+      <div class="register-grid-cell col-address-cell">${row.address}</div>
+      <div class="register-grid-cell col-access-cell">${esc(accessMeta(row))}</div>
+      <div class="register-grid-cell col-name-cell">
         <strong>${esc(row.name)}</strong>
         <div class="small dim">${esc(row.display || "")}</div>
         ${row.explanation ? `<div class="small dim">${esc(row.explanation)}</div>` : ""}
-      </td>
-      <td class="col-value-cell">${renderValueCell(row, current)}</td>
-      <td class="col-write-cell">${renderWriteCell(row, writer)}</td>
-      <td class="model-meta-cell">
+      </div>
+      <div class="register-grid-cell col-value-cell">${renderValueCell(row, current)}</div>
+      <div class="register-grid-cell col-write-cell">${renderWriteCell(row, writer)}</div>
+      <div class="register-grid-cell model-meta-cell">
         ${modelMetaRow("Category", row.category)}
         ${row.menuTags.length ? `<div class="small dim menu-line"><span class="model-label">Menus:</span> ${row.menuTags.map(esc).join(" | ")}</div>` : ""}
-      </td>
-    </tr>
+      </div>
+    </div>
   `;
 }
 
@@ -671,6 +667,23 @@ function renderParameterTableBody() {
     rows.push(parameterRow(row));
   });
   return rows.join("");
+}
+
+function renderParameterGrid() {
+  return `
+    <div class="register-grid">
+      <div class="register-grid-row register-grid-head">
+        <div class="register-grid-cell">Code</div>
+        <div class="register-grid-cell">Address</div>
+        <div class="register-grid-cell">Access</div>
+        <div class="register-grid-cell">Name</div>
+        <div class="register-grid-cell">Value</div>
+        <div class="register-grid-cell">Write</div>
+        <div class="register-grid-cell">Model</div>
+      </div>
+      ${renderParameterTableBody()}
+    </div>
+  `;
 }
 
 function renderSetup() {
@@ -710,21 +723,7 @@ function renderSetup() {
           </div>
         </div>
         <div class="table-wrap">
-          <table class="register-table">
-            <colgroup>
-              <col class="col-code">
-              <col class="col-address">
-              <col class="col-access">
-              <col class="col-name">
-              <col class="col-value">
-              <col class="col-write">
-              <col class="col-model">
-            </colgroup>
-            <thead>
-              <tr><th>Code</th><th>Address</th><th>Access</th><th>Name</th><th>Value</th><th>Write</th><th>Model</th></tr>
-            </thead>
-            <tbody>${renderParameterTableBody()}</tbody>
-          </table>
+          ${renderParameterGrid()}
         </div>
       </article>
     </div>
@@ -791,21 +790,7 @@ function renderProvisioningSetup() {
           </div>
         </div>
         <div class="table-wrap">
-          <table class="register-table">
-            <colgroup>
-              <col class="col-code">
-              <col class="col-address">
-              <col class="col-access">
-              <col class="col-name">
-              <col class="col-value">
-              <col class="col-write">
-              <col class="col-model">
-            </colgroup>
-            <thead>
-              <tr><th>Code</th><th>Address</th><th>Access</th><th>Name</th><th>Value</th><th>Write</th><th>Model</th></tr>
-            </thead>
-            <tbody>${renderParameterTableBody()}</tbody>
-          </table>
+          ${renderParameterGrid()}
         </div>
       </article>
     </div>
