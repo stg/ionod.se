@@ -622,10 +622,11 @@
       const bootstrap = buildBootstrap(bundle);
       const codes = (bootstrap.catalog && bootstrap.catalog.monitorCodes) || [];
       const result = await readMany(state, codes);
+      const overviewSpec = (((bundle.bootstrap || {}).ui || {}).overviewSpec || {});
       return {
         ok: true,
         values: result.values,
-        overview: buildOverview((((bundle.bootstrap || {}).ui || {}).overviewSpec || {}, result.values, state.staticRegisterMap || {}),
+        overview: buildOverview(overviewSpec, result.values, state.staticRegisterMap || {}),
       };
     },
     async loadReference(state) {
