@@ -16,6 +16,7 @@ const state = {
   setupValuesLoading: false,
   setupValueRequestId: 0,
   provisioning: null,
+  provisioningWriteAllActive: false,
 };
 
 const staticRuntime = window.ReplicaStaticRuntime || null;
@@ -1026,11 +1027,16 @@ async function writeAllProvisioningValues() {
     setStatus("No writable provisioning values were found in the dropped file.", true);
     return;
   }
-  for (let index = 0; index < sequence.length; index += 1) {
-    const item = sequence[index];
-    const input = document.querySelector(`.write-input[data-code="${CSS.escape(item.code)}"], .write-select[data-code="${CSS.escape(item.code)}"]`);
-    setStatus(`Writing provisioning value ${index + 1}/${sequence.length}: ${item.code}...`);
-    await writeRegisterValue(item.code, item.value, input);
+  state.provisioningWriteAllActive = true;
+  try {
+    for (let index = 0; index < sequence.length; index += 1) {
+      const item = sequence[index];
+      const input = document.querySelector(`.write-input[data-code="${CSS.escape(item.code)}"], .write-select[data-code="${CSS.escape(item.code)}"]`);
+      setStatus(`Writing provisioning value ${index + 1}/${sequence.length}: ${item.code}...`);
+      await writeRegisterValue(item.code, item.value, input);
+    }
+  } finally {
+    state.provisioningWriteAllActive = false;
   }
   setStatus(`Wrote ${sequence.length} provisioning values.`);
   await loadOverview();
@@ -1269,7 +1275,7 @@ async function main() {
   window.addEventListener("dragend", clearDragActive);
   window.addEventListener("blur", clearDragActive);
   setInterval(() => {
-    if (state.live) {
+    if (state.live && !state.provisioningWriteAllActive) {
       refreshVisiblePage();
     }
   }, 3000);
