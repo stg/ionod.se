@@ -377,7 +377,7 @@ table{width:100%;border-collapse:collapse}
 
 .register-table{
   width:100%;
-  min-width:100%;
+  min-width:calc(6ch + 7ch + 18ch + 20ch + 14ch + 14ch + 14rem + 24rem);
   table-layout:fixed;
 }
 
@@ -447,14 +447,6 @@ tr:hover td{background:#fcfaf6}
 .col-value-cell,
 .col-write-cell{
   white-space:nowrap;
-}
-
-.col-code-cell,
-.col-address-cell,
-.col-access-cell,
-.col-value-cell,
-.col-write-cell{
-  width:1%;
 }
 
 .col-name-cell{
