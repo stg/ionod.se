@@ -646,9 +646,9 @@ function parameterRow(row) {
       </td>
       <td>${renderValueCell(row, current)}</td>
       <td>${renderWriteCell(row, writer)}</td>
-      <td>
+      <td class="model-meta-cell">
         ${modelMetaRow("Category", row.category)}
-        ${row.menuTags.length ? `<div class="small dim"><span class="model-label">Menus:</span> ${row.menuTags.map(esc).join(" | ")}</div>` : ""}
+        ${row.menuTags.length ? `<div class="small dim menu-line"><span class="model-label">Menus:</span> ${row.menuTags.map(esc).join(" | ")}</div>` : ""}
       </td>
     </tr>
   `;

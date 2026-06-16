@@ -248,16 +248,18 @@ button.secondary{
 
 .current-cell.provision-match{
   background:#2c8a57;
-  border-radius:10px;
+  border-radius:4px;
   color:#fff;
   font-weight:700;
+  margin-left:4px;
 }
 
 .current-cell.provision-mismatch{
   background:#b33a33;
-  border-radius:10px;
+  border-radius:4px;
   color:#fff;
   font-weight:700;
+  margin-left:4px;
 }
 
 .current-cell.provision-match .dim,
@@ -422,9 +424,22 @@ tr:hover td{background:#fcfaf6}
 }
 
 .small{font-size:.88rem}
+.model-meta-cell{
+  width:25%;
+  max-width:25%;
+}
+
 .model-label{
   color:var(--text);
   font-weight:700;
+}
+
+.menu-line{
+  display:block;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 .value-stack,
 .write-stack{
