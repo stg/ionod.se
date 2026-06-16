@@ -46,6 +46,260 @@ async function getJson(url, options) {
   return data;
 }
 
+function objectValue(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
+
+function arrayValue(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function stringValue(value, fallback = "") {
+  return value === undefined || value === null ? fallback : String(value);
+}
+
+function numberValue(value, fallback = 0) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function booleanValue(value) {
+  return value === true;
+}
+
+function normalizeLiveItem(raw) {
+  const item = objectValue(raw);
+  return {
+    label: stringValue(item["label"]),
+    value: stringValue(item["value"]),
+    detail: stringValue(item["detail"]),
+  };
+}
+
+function normalizeOverview(raw) {
+  const groups = objectValue(raw);
+  const normalized = {};
+  Object.keys(groups).forEach((group) => {
+    normalized[group] = arrayValue(groups[group]).map(normalizeLiveItem);
+  });
+  return normalized;
+}
+
+function normalizeValueEntry(raw) {
+  const item = objectValue(raw);
+  return {
+    raw: item["raw"],
+    value: item["value"],
+    label: stringValue(item["label"]),
+    address: numberValue(item["address"]),
+    units: stringValue(item["units"]),
+    type: stringValue(item["type"]),
+  };
+}
+
+function normalizeValues(raw) {
+  const values = objectValue(raw);
+  const normalized = {};
+  Object.keys(values).forEach((code) => {
+    normalized[String(code)] = normalizeValueEntry(values[code]);
+  });
+  return normalized;
+}
+
+function normalizeSection(raw) {
+  const item = objectValue(raw);
+  return {
+    id: stringValue(item["id"]),
+    title: stringValue(item["title"]),
+    groups: arrayValue(item["groups"]).map((group) => stringValue(group)),
+  };
+}
+
+function normalizeBlock(raw) {
+  const item = objectValue(raw);
+  return {
+    id: stringValue(item["id"]),
+    title: stringValue(item["title"]),
+    description: stringValue(item["description"]),
+    count: numberValue(item["count"]),
+    readableCount: numberValue(item["readableCount"]),
+    writableCount: numberValue(item["writableCount"]),
+  };
+}
+
+function normalizeTransport(raw) {
+  const item = objectValue(raw);
+  return {
+    ionod: item["ionod"] ?? null,
+    target: stringValue(item["target"]),
+    display_host: stringValue(item["display_host"]),
+    display_user: stringValue(item["display_user"]),
+    mode: stringValue(item["mode"]),
+    tcp_port: numberValue(item["tcp_port"]),
+    proxy_command: item["proxy_command"] ?? null,
+    raw_base_url: item["raw_base_url"] ?? null,
+    raw_url: item["raw_url"] ?? null,
+    unit_id: numberValue(item["unit_id"]),
+  };
+}
+
+function normalizeCatalog(raw) {
+  const item = objectValue(raw);
+  return {
+    registers: numberValue(item["registers"]),
+    monitorCodes: arrayValue(item["monitorCodes"]).map((code) => stringValue(code)),
+  };
+}
+
+function normalizeModel(raw) {
+  const item = objectValue(raw);
+  const coverage = objectValue(item["coverage"]);
+  const groups = objectValue(item["groups"]);
+  return {
+    coverage: {
+      registers: numberValue(coverage["registers"]),
+      blocks: numberValue(coverage["blocks"]),
+      subgroups: numberValue(coverage["subgroups"]),
+      driveParameterBlocks: numberValue(coverage["driveParameterBlocks"]),
+      communicationBlocks: numberValue(coverage["communicationBlocks"]),
+      writableRegisters: numberValue(coverage["writableRegisters"]),
+      readableRegisters: numberValue(coverage["readableRegisters"]),
+      orphanRegisters: numberValue(coverage["orphanRegisters"]),
+      subgroupFallbackRegisters: numberValue(coverage["subgroupFallbackRegisters"]),
+    },
+    groups: {
+      driveParameter: arrayValue(groups["driveParameter"]).map(normalizeBlock),
+      communication: arrayValue(groups["communication"]).map(normalizeBlock),
+    },
+  };
+}
+
+function normalizeUiSource(raw) {
+  return arrayValue(raw).map((entry) => {
+    const item = objectValue(entry);
+    return {
+      group: stringValue(item["group"]),
+      take: item["take"] === undefined ? null : numberValue(item["take"]),
+      skip: item["skip"] === undefined ? 0 : numberValue(item["skip"]),
+    };
+  });
+}
+
+function normalizeUiCard(raw) {
+  const item = objectValue(raw);
+  return {
+    title: stringValue(item["title"]),
+    liveGroup: stringValue(item["liveGroup"]),
+    source: normalizeUiSource(item["source"]),
+  };
+}
+
+function normalizeUiSection(raw) {
+  const item = objectValue(raw);
+  const hero = objectValue(item["hero"]);
+  return {
+    kind: stringValue(item["kind"]),
+    eyebrow: stringValue(item["eyebrow"]),
+    title: stringValue(item["title"]),
+    columns: stringValue(item["columns"], "three"),
+    group: stringValue(item["group"]),
+    liveGroup: stringValue(item["liveGroup"]),
+    description: stringValue(item["description"]),
+    hero: hero && Object.keys(hero).length ? {
+      group: stringValue(hero["group"]),
+      liveGroup: stringValue(hero["liveGroup"]),
+    } : null,
+    cards: arrayValue(item["cards"]).map(normalizeUiCard),
+  };
+}
+
+function normalizeUi(raw) {
+  const item = objectValue(raw);
+  const pages = objectValue(item["pages"]);
+  const normalizePage = (pageRaw) => {
+    const page = objectValue(pageRaw);
+    return {
+      eyebrow: stringValue(page["eyebrow"]),
+      title: stringValue(page["title"]),
+      sections: arrayValue(page["sections"]).map(normalizeUiSection),
+    };
+  };
+  return {
+    pages: {
+      home: normalizePage(pages["home"]),
+      monitoring: normalizePage(pages["monitoring"]),
+    },
+  };
+}
+
+function normalizeBootstrap(raw) {
+  const item = objectValue(raw);
+  const branding = objectValue(item["branding"]);
+  return {
+    title: stringValue(item["title"], "Modbus Drive Console"),
+    product: stringValue(item["product"]),
+    branding: {
+      eyebrow: stringValue(branding["eyebrow"], stringValue(item["product"], "Drive")),
+      title: stringValue(branding["title"], stringValue(item["title"], "Modbus Drive")),
+    },
+    sections: arrayValue(item["sections"]).map(normalizeSection),
+    transport: normalizeTransport(item["transport"]),
+    catalog: normalizeCatalog(item["catalog"]),
+    model: normalizeModel(item["model"]),
+    referencePayloads: objectValue(item["referencePayloads"]),
+    ui: normalizeUi(item["ui"]),
+  };
+}
+
+function normalizeRegisterRow(raw) {
+  const item = objectValue(raw);
+  return {
+    code: stringValue(item["code"]),
+    name: stringValue(item["name"]),
+    address: numberValue(item["address"]),
+    access: stringValue(item["access"]),
+    type: stringValue(item["type"]),
+    units: stringValue(item["units"]),
+    category: stringValue(item["category"]),
+    menu: stringValue(item["menu"]),
+    menuTags: arrayValue(item["menuTags"]).map((tag) => stringValue(tag)),
+    display: stringValue(item["display"]),
+    range: stringValue(item["range"]),
+    readable: booleanValue(item["readable"]),
+    writable: booleanValue(item["writable"]),
+    widget: stringValue(item["widget"]),
+    word_count: numberValue(item["word_count"], 1),
+    enum: arrayValue(item["enum"]).map((entry) => {
+      const enumItem = objectValue(entry);
+      return {
+        value: enumItem["value"],
+        display: stringValue(enumItem["display"]),
+      };
+    }),
+    min_hint: item["min_hint"],
+    max_hint: item["max_hint"],
+    block: stringValue(item["block"]),
+    blockTitle: stringValue(item["blockTitle"]),
+    subgroup: stringValue(item["subgroup"]),
+    subgroupTitle: stringValue(item["subgroupTitle"]),
+    subgroupDescription: stringValue(item["subgroupDescription"]),
+    explanation: stringValue(item["explanation"]),
+    notes: arrayValue(item["notes"]).map((note) => stringValue(note)),
+    signed: booleanValue(item["signed"]),
+    word_order: stringValue(item["word_order"], "msw_first"),
+    value_format: stringValue(item["value_format"]),
+    sort_index: numberValue(item["sort_index"]),
+  };
+}
+
+function normalizeOverviewPayload(raw) {
+  const item = objectValue(raw);
+  return {
+    values: normalizeValues(item["values"]),
+    overview: normalizeOverview(item["overview"]),
+  };
+}
+
 function useStaticRuntime() {
   return !!(staticRuntime && staticRuntime.isEnabled && staticRuntime.isEnabled());
 }
@@ -63,10 +317,7 @@ function mergeRegisterCache(values) {
 
 function allBlocks() {
   const groups = state.bootstrap.model.groups;
-  return [
-    ...groups.driveParameter,
-    ...groups.communication,
-  ];
+  return [...groups.driveParameter, ...groups.communication];
 }
 
 function blockById(id) {
@@ -132,6 +383,42 @@ function renderGroupHeader(title, text = "", eyebrow = "Group") {
   `;
 }
 
+function gridClass(columns) {
+  if (columns === "two" || columns === "three" || columns === "four") {
+    return columns;
+  }
+  return "three";
+}
+
+function configuredPage(pageId) {
+  return state.bootstrap?.ui?.pages?.[pageId] || null;
+}
+
+function selectOverviewItems(overview, source) {
+  const parts = Array.isArray(source) ? source : [];
+  const items = [];
+  parts.forEach((part) => {
+    const groupItems = Array.isArray(overview?.[part.group]) ? overview[part.group] : [];
+    const start = Math.max(Number(part.skip || 0), 0);
+    const slice = groupItems.slice(start);
+    if (part.take === null || part.take === undefined) {
+      items.push(...slice);
+      return;
+    }
+    items.push(...slice.slice(0, Math.max(Number(part.take), 0)));
+  });
+  return items;
+}
+
+function renderConfiguredCards(cards, overview, columns) {
+  return `<div class="grid ${gridClass(columns)}">${cards.map((card) => `
+    <article class="card">
+      <h3>${esc(card.title)}</h3>
+      ${renderKeyValueList(selectOverviewItems(overview, card.source), card.liveGroup)}
+    </article>
+  `).join("")}</div>`;
+}
+
 function renderCurrentCell(row, current) {
   if (!current) {
     return `<span class="dim">not loaded</span>`;
@@ -164,10 +451,7 @@ function syncWriteControlFromValue(code, valueInfo) {
     return;
   }
   const control = document.querySelector(`.write-input[data-code="${CSS.escape(code)}"], .write-select[data-code="${CSS.escape(code)}"]`);
-  if (!control) {
-    return;
-  }
-  if (document.activeElement === control) {
+  if (!control || document.activeElement === control) {
     return;
   }
   const nextValue = valueInfo.raw ?? valueInfo.value;
@@ -234,10 +518,7 @@ function syncSetupWriteControls() {
   const active = document.activeElement;
   state.registers.forEach((row) => {
     const control = document.querySelector(`.write-input[data-code="${CSS.escape(row.code)}"], .write-select[data-code="${CSS.escape(row.code)}"]`);
-    if (!control) {
-      return;
-    }
-    if (control === active || control.dataset.userEdited === "1") {
+    if (!control || control === active || control.dataset.userEdited === "1") {
       return;
     }
     syncWriteControlFromValue(row.code, currentValue(row.code));
@@ -357,13 +638,15 @@ function parameterSubgroupRow(row) {
 }
 
 function renderHome() {
-  const overview = state.overview?.overview;
+  const layout = configuredPage("home");
+  const overview = state.overview?.overview || {};
   const coverage = state.bootstrap.model.coverage;
+  const sections = Array.isArray(layout?.sections) ? layout.sections : [];
   $("homePage").innerHTML = `
     <div class="section-head">
       <div>
-        <div class="eyebrow">Drive Overview</div>
-        <h3>ATV71 overview</h3>
+        <div class="eyebrow">${esc(layout?.eyebrow || "Drive Overview")}</div>
+        <h3>${esc(layout?.title || state.bootstrap.title)}</h3>
       </div>
     </div>
     <div class="summary-strip">
@@ -392,33 +675,18 @@ function renderHome() {
         <strong>${state.bootstrap.catalog.monitorCodes.length}</strong>
       </article>
     </div>
-    ${renderOverviewMetrics(overview?.hero || [], "homeHero")}
-    ${renderGroupHeader("Drive", "", "Home")}
-    <div class="grid three">
-      <article class="card">
-        <h3>Status and channels</h3>
-        ${renderKeyValueList(overview?.states || [], "homeStates")}
-      </article>
-      <article class="card">
-        <h3>Reference and PID</h3>
-        ${renderKeyValueList(overview?.references || [], "homeReferences")}
-      </article>
-      <article class="card">
-        <h3>Electrical and thermal</h3>
-        ${renderKeyValueList([...(overview?.electrical || []), ...(overview?.thermal || []).slice(0, 3)], "homeElectricalThermal")}
-      </article>
-    </div>
-    ${renderGroupHeader("Diagnostic", "", "Home")}
-    <div class="grid two">
-      <article class="card">
-        <h3>Current fault summary</h3>
-        ${renderKeyValueList(overview?.diagnostics || [], "homeDiagnostics")}
-      </article>
-      <article class="card">
-        <h3>Network and session</h3>
-        ${renderKeyValueList(overview?.network || [], "homeNetwork")}
-      </article>
-    </div>
+    ${sections.map((section) => {
+      if (section.kind === "hero") {
+        return renderOverviewMetrics(overview?.[section.group] || [], section.liveGroup);
+      }
+      if (section.kind === "cardRow") {
+        return `
+          ${section.title ? renderGroupHeader(section.title, section.description || "", section.eyebrow || "Home") : ""}
+          ${renderConfiguredCards(section.cards, overview, section.columns)}
+        `;
+      }
+      return "";
+    }).join("")}
   `;
 }
 
@@ -427,92 +695,80 @@ function renderMonitoring() {
     $("monitoringPage").innerHTML = `<article class="card"><p>Loading live overview...</p></article>`;
     return;
   }
+  const layout = configuredPage("monitoring");
   const { overview, values } = state.overview;
   const monitorCount = Object.keys(values).length;
   $("monitoringPage").innerHTML = `
     <div class="group-shell">
-      ${renderGroupHeader("Drive")}
-      ${renderOverviewMetrics(overview.hero, "monitorHero")}
-      <div class="grid four">
-        <article class="card">
-          <h3>Status and channels</h3>
-          ${renderKeyValueList(overview.states, "monitorStates")}
-        </article>
-        <article class="card">
-          <h3>Reference and PID</h3>
-          ${renderKeyValueList(overview.references, "monitorReferences")}
-        </article>
-        <article class="card">
-          <h3>Electrical state</h3>
-          ${renderKeyValueList(overview.electrical, "monitorElectrical")}
-        </article>
-        <article class="card">
-          <h3>Thermal state</h3>
-          ${renderKeyValueList(overview.thermal, "monitorThermal")}
-        </article>
-      </div>
-      ${renderGroupHeader("I/O")}
-      <div class="grid three">
-        <article class="card">
-          <h3>Base digital I/O</h3>
-          ${renderKeyValueList(overview.digitalBase, "monitorDigitalBase")}
-        </article>
-        <article class="card">
-          <h3>Card digital I/O</h3>
-          ${renderKeyValueList(overview.digitalCard, "monitorDigitalCard")}
-        </article>
-        <article class="card">
-          <h3>Analog channels</h3>
-          ${renderKeyValueList(overview.analog, "monitorAnalog")}
-        </article>
-      </div>
-      <article class="card">
-        <div class="card-head">
-          <div>
-            <h3>Monitor variables</h3>
-            <p class="small dim">${monitorCount} live monitor points.</p>
-          </div>
-        </div>
-        <div class="table-wrap compact-table">
-          <table>
-            <thead><tr><th>Code</th><th>Address</th><th>Value</th><th>Raw</th><th>Label</th></tr></thead>
-            <tbody>
-              ${renderMonitorTableRows(values)}
-            </tbody>
-          </table>
-        </div>
-      </article>
+      ${arrayValue(layout?.sections).map((section) => {
+        if (section.kind === "monitorSection") {
+          return `
+            ${section.title ? renderGroupHeader(section.title, section.description || "", section.eyebrow || "Group") : ""}
+            ${section.hero ? renderOverviewMetrics(overview?.[section.hero.group] || [], section.hero.liveGroup) : ""}
+            ${renderConfiguredCards(section.cards, overview, section.columns)}
+          `;
+        }
+        if (section.kind === "monitorTable") {
+          return `
+            <article class="card">
+              <div class="card-head">
+                <div>
+                  <h3>${esc(section.title || "Monitor variables")}</h3>
+                  <p class="small dim">${esc((section.description || "{monitorCount} live monitor points.").replace("{monitorCount}", String(monitorCount)))}</p>
+                </div>
+              </div>
+              <div class="table-wrap compact-table">
+                <table>
+                  <thead><tr><th>Code</th><th>Address</th><th>Value</th><th>Raw</th><th>Label</th></tr></thead>
+                  <tbody>${renderMonitorTableRows(values)}</tbody>
+                </table>
+              </div>
+            </article>
+          `;
+        }
+        return "";
+      }).join("")}
     </div>
   `;
 }
 
 function updateHomeValues() {
-  const overview = state.overview?.overview;
+  const layout = configuredPage("home");
+  const overview = state.overview?.overview || {};
   if (!overview) {
     return;
   }
-  patchLiveItems("homeHero", overview.hero || []);
-  patchLiveItems("homeStates", overview.states || []);
-  patchLiveItems("homeReferences", overview.references || []);
-  patchLiveItems("homeElectricalThermal", [...(overview.electrical || []), ...(overview.thermal || []).slice(0, 3)]);
-  patchLiveItems("homeDiagnostics", overview.diagnostics || []);
-  patchLiveItems("homeNetwork", overview.network || []);
+  arrayValue(layout?.sections).forEach((section) => {
+    if (section.kind === "hero") {
+      patchLiveItems(section.liveGroup, overview[section.group] || []);
+      return;
+    }
+    if (section.kind === "cardRow") {
+      section.cards.forEach((card) => {
+        patchLiveItems(card.liveGroup, selectOverviewItems(overview, card.source));
+      });
+    }
+  });
 }
 
 function updateMonitoringValues() {
-  const overview = state.overview?.overview;
+  const layout = configuredPage("monitoring");
+  const overview = state.overview?.overview || {};
   const values = state.overview?.values || {};
   if (!overview) {
     return;
   }
-  patchLiveItems("monitorHero", overview.hero || []);
-  patchLiveItems("monitorStates", overview.states || []);
-  patchLiveItems("monitorReferences", overview.references || []);
-  patchLiveItems("monitorElectrical", overview.electrical || []);
-  patchLiveItems("monitorThermal", overview.thermal || []);
-  patchLiveItems("monitorDigitalBase", overview.digitalBase || []);
-  patchLiveItems("monitorDigitalCard", overview.digitalCard || []);
-  patchLiveItems("monitorAnalog", overview.analog || []);
+  arrayValue(layout?.sections).forEach((section) => {
+    if (section.kind !== "monitorSection") {
+      return;
+    }
+    if (section.hero) {
+      patchLiveItems(section.hero.liveGroup, overview[section.hero.group] || []);
+    }
+    section.cards.forEach((card) => {
+      patchLiveItems(card.liveGroup, selectOverviewItems(overview, card.source));
+    });
+  });
   updateMonitorTable(values);
 }
 
@@ -558,7 +814,7 @@ function formatTransportMeta(transport) {
         return [node, displayUser, endpointTarget].filter(Boolean).join(" ");
       }
     } catch (_error) {
-      // fall back to generic label below
+      // fall back below
     }
   }
   const unitText = `unit ${transport.unit_id}`;
@@ -604,16 +860,6 @@ function accessMeta(row) {
     parts.push(`[${row.access}]`);
   }
   return parts.join(" ");
-}
-
-function renderValueMeta(row) {
-  const meta = scalingMeta(row);
-  if (!meta.units && !meta.range) {
-    return "";
-  }
-  return `
-    ${meta.range ? `<div class="small dim value-meta">range ${esc(meta.range)}</div>` : ""}
-  `;
 }
 
 function renderValueCell(row, current) {
@@ -857,7 +1103,7 @@ async function writeRegisterValue(code, value, input) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, value }),
       });
-    const readback = result.write?.readback;
+    const readback = result.write?.readback ? normalizeValueEntry(result.write.readback) : null;
     if (readback) {
       mergeRegisterCache({ [code]: readback });
       if (input && !shouldPreserveEditedState(code)) {
@@ -916,7 +1162,7 @@ async function fetchRegisters(options = {}) {
       }
       return getJson(`/api/registers?${params.toString()}`);
     })();
-  return data.items || [];
+  return arrayValue(objectValue(data)["items"]).map(normalizeRegisterRow);
 }
 
 async function loadAllRegisters() {
@@ -1101,18 +1347,27 @@ async function openBlock(blockId) {
 }
 
 async function loadBootstrap() {
-  state.bootstrap = useStaticRuntime()
+  state.bootstrap = normalizeBootstrap(useStaticRuntime()
     ? await staticRuntime.loadBootstrap(state)
-    : await getJson("/api/bootstrap");
+    : await getJson("/api/bootstrap"));
   state.currentBlock = state.bootstrap.model.groups.driveParameter[0]?.id || "";
+  document.title = state.bootstrap.title || document.title;
+  const brandEyebrow = $("brandEyebrow");
+  const brandTitle = $("brandTitle");
+  if (brandEyebrow) {
+    brandEyebrow.textContent = state.bootstrap.branding.eyebrow;
+  }
+  if (brandTitle) {
+    brandTitle.textContent = state.bootstrap.branding.title;
+  }
   $("transportMeta").textContent = formatTransportMeta(state.bootstrap.transport);
   renderNav();
 }
 
 async function loadOverview() {
-  state.overview = useStaticRuntime()
+  state.overview = normalizeOverviewPayload(useStaticRuntime()
     ? await staticRuntime.loadOverview(state)
-    : await getJson("/api/overview");
+    : await getJson("/api/overview"));
   mergeRegisterCache(state.overview.values || {});
   if (!$("homePage").innerHTML.trim()) {
     renderHome();
@@ -1164,10 +1419,10 @@ async function loadCurrentRegisterValues() {
   if (requestId !== state.setupValueRequestId) {
     return;
   }
-  mergeRegisterCache(data.values || {});
+  mergeRegisterCache(normalizeValues(objectValue(data)["values"]));
   state.setupValuesLoading = false;
   updateSetupValueCells();
-  setStatus(`Loaded ${Object.keys(data.values || {}).length} register values`);
+  setStatus(`Loaded ${Object.keys(objectValue(data)["values"]).length} register values`);
 }
 
 function ensureSetupValuesLoadedSoon() {

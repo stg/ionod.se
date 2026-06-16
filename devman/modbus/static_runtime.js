@@ -2,6 +2,7 @@
   const STATIC_CONFIG = window.REPLICA_STATIC_CONFIG || null;
   const WORD_ORDER_MSW_FIRST = "msw_first";
   const WORD_ORDER_LSW_FIRST = "lsw_first";
+  const BIT_NOTE_RE = /bit\s+(\d+)\s*:\s*(.+)/i;
   const MAX_BATCH_WORDS = 16;
 
   function isEnabled() {
@@ -89,6 +90,39 @@
     return value.toFixed(3).replace(/0+$/, "").replace(/\.$/, "");
   }
 
+  function parseBitLabels(notes) {
+    const labels = [];
+    for (const note of Array.isArray(notes) ? notes : []) {
+      for (const rawLine of String(note || "").split(/\r?\n/)) {
+        const match = rawLine.trim().match(BIT_NOTE_RE);
+        if (!match) {
+          continue;
+        }
+        let label = match[2].trim();
+        if (label.includes("Reserved")) {
+          continue;
+        }
+        label = label.replace(/^Value of\s+/i, "");
+        label = label.replace(/\s+logic (input|output) physical image$/i, "");
+        const bracketed = label.match(/\[([^\]]+)\]/);
+        if (bracketed) {
+          label = bracketed[1].trim();
+        }
+        label = label.split(",")[0].trim();
+        labels.push([Number.parseInt(match[1], 10), label]);
+      }
+    }
+    return labels;
+  }
+
+  function bitmaskLabel(register, raw) {
+    const active = parseBitLabels(register.notes || []).filter(([bit]) => (raw & (1 << bit)) !== 0);
+    if (!active.length) {
+      return null;
+    }
+    return active.map(([, label]) => label).join(", ");
+  }
+
   function formatRegisterValue(values, registerMap, code, options = {}) {
     const entry = values[code];
     if (!entry) {
@@ -127,103 +161,63 @@
     return (raw & (1 << bit)) !== 0 ? "On" : "Off";
   }
 
-  function deriveOverview(values, registerMap) {
-    const [etaValue, etaDetail] = wordState(values, "ETA");
-    const [etiValue, etiDetail] = wordState(values, "ETI");
-    const [cmdValue, cmdDetail] = wordState(values, "CMD");
-    const inputImage = values.IL1I ? values.IL1I.raw : null;
-    const outputImage = values.OL1R ? values.OL1R.raw : null;
-    return {
-      hero: [
-        { label: "Output frequency", value: formatRegisterValue(values, registerMap, "LFR", { divisor: 10, suffix: "Hz" }) },
-        { label: "Reference frequency", value: formatRegisterValue(values, registerMap, "RFR", { divisor: 10, suffix: "Hz" }) },
-        { label: "Speed", value: formatRegisterValue(values, registerMap, "SPD", { divisor: 10, suffix: "Hz" }) },
-        { label: "Motor current", value: formatRegisterValue(values, registerMap, "LCR", { divisor: 10, suffix: "A" }) },
-        { label: "Output power", value: formatRegisterValue(values, registerMap, "EPRW", { divisor: 10, suffix: "kW" }) },
-        { label: "Efficiency", value: formatRegisterValue(values, registerMap, "EFY", { divisor: 10, suffix: "%" }) },
-      ],
-      drive: [
-        { label: "Status word", value: etaValue, detail: etaDetail },
-        { label: "Drive state", value: etiValue, detail: etiDetail },
-        { label: "Command word", value: cmdValue, detail: cmdDetail },
-        { label: "Command channel", value: formatRegisterValue(values, registerMap, "CCC", { includeLabel: true }) },
-        { label: "Reference channel", value: formatRegisterValue(values, registerMap, "CRC", { includeLabel: true }) },
-        { label: "HMI state", value: formatRegisterValue(values, registerMap, "HMIS", { includeLabel: true }) },
-        { label: "Active set", value: formatRegisterValue(values, registerMap, "CFPS", { includeLabel: true }) },
-        { label: "Switching frequency", value: formatRegisterValue(values, registerMap, "SFR", { suffix: "kHz" }) },
-      ],
-      electrical: [
-        { label: "Mains voltage", value: formatRegisterValue(values, registerMap, "ULN", { divisor: 10, suffix: "V" }) },
-        { label: "DC bus", value: formatRegisterValue(values, registerMap, "VBUS", { divisor: 10, suffix: "V" }) },
-        { label: "Motor voltage", value: formatRegisterValue(values, registerMap, "UOP", { suffix: "V" }) },
-        { label: "Motor power", value: formatRegisterValue(values, registerMap, "OPR", { suffix: "kW" }) },
-        { label: "Motor torque", value: formatRegisterValue(values, registerMap, "OTR", { suffix: "%" }) },
-        { label: "Drive thermal", value: formatRegisterValue(values, registerMap, "THD", { suffix: "%" }) },
-        { label: "Motor thermal", value: formatRegisterValue(values, registerMap, "THR", { suffix: "%" }) },
-      ],
-      io: [
-        { label: "AI1", value: formatRegisterValue(values, registerMap, "AI1C", { divisor: 1000 }) },
-        { label: "AI2", value: formatRegisterValue(values, registerMap, "AI2C", { divisor: 1000 }) },
-        { label: "AI3", value: formatRegisterValue(values, registerMap, "AI3C", { divisor: 1000 }) },
-        { label: "AI4", value: formatRegisterValue(values, registerMap, "AI4C", { divisor: 1000 }) },
-        { label: "AI5", value: formatRegisterValue(values, registerMap, "AI5C", { divisor: 1000 }) },
-        { label: "AO1", value: formatRegisterValue(values, registerMap, "AO1C", { divisor: 1000 }) },
-        { label: "AO2", value: formatRegisterValue(values, registerMap, "AO2C", { divisor: 1000 }) },
-        { label: "DI1", value: formatBitState(inputImage, 0) },
-        { label: "DI2", value: formatBitState(inputImage, 1) },
-        { label: "DI3", value: formatBitState(inputImage, 2) },
-        { label: "DI4", value: formatBitState(inputImage, 3) },
-        { label: "DI5", value: formatBitState(inputImage, 4) },
-        { label: "DI6", value: formatBitState(inputImage, 5) },
-        { label: "R1", value: formatBitState(outputImage, 0) },
-        { label: "R2", value: formatBitState(outputImage, 1) },
-        { label: "R3", value: formatBitState(outputImage, 2) },
-      ],
-      process: [
-        { label: "Internal PID ref", value: formatRegisterValue(values, registerMap, "RPI", { divisor: 100, suffix: "bar" }) },
-        { label: "PID reference", value: formatRegisterValue(values, registerMap, "RPC", { divisor: 100, suffix: "bar" }) },
-        { label: "PID feedback", value: formatRegisterValue(values, registerMap, "RPF", { divisor: 100, suffix: "bar" }) },
-        { label: "PID error", value: formatRegisterValue(values, registerMap, "RPE", { divisor: 100, suffix: "bar" }) },
-        { label: "PID output", value: formatRegisterValue(values, registerMap, "RPO", { divisor: 10, suffix: "Hz" }) },
-        { label: "Flow sensor 1", value: formatRegisterValue(values, registerMap, "FS1V", { divisor: 100 }) },
-        { label: "Flow sensor 2", value: formatRegisterValue(values, registerMap, "FS2V", { divisor: 100 }) },
-        { label: "Inlet pressure", value: formatRegisterValue(values, registerMap, "PS1V", { divisor: 100, suffix: "bar" }) },
-        { label: "Outlet pressure", value: formatRegisterValue(values, registerMap, "PS2V", { divisor: 100, suffix: "bar" }) },
-        { label: "Total quantity", value: formatRegisterValue(values, registerMap, "FS1C", { divisor: 100 }) },
-        { label: "Application state", value: formatRegisterValue(values, registerMap, "APPS", { includeLabel: true }) },
-      ],
-      energy: [
-        { label: "Electrical power", value: formatRegisterValue(values, registerMap, "EPRW", { divisor: 10, suffix: "kW" }) },
-        { label: "Electrical power sum", value: formatRegisterValue(values, registerMap, "EPRS", { divisor: 10, suffix: "kW" }) },
-        { label: "Input power", value: formatRegisterValue(values, registerMap, "IPRW", { divisor: 10, suffix: "kW" }) },
-        { label: "Efficiency", value: formatRegisterValue(values, registerMap, "EFY", { divisor: 10, suffix: "%" }) },
-        { label: "Efficiency sum", value: formatRegisterValue(values, registerMap, "EFYS", { divisor: 10, suffix: "%" }) },
-        { label: "Energy consumption index", value: formatRegisterValue(values, registerMap, "ECI", { divisor: 10, suffix: "%" }) },
-        { label: "Energy performance index", value: formatRegisterValue(values, registerMap, "EPI", { divisor: 10, suffix: "%" }) },
-        { label: "Runtime thermal", value: formatRegisterValue(values, registerMap, "RTH") },
-        { label: "Power on time", value: formatRegisterValue(values, registerMap, "PTH") },
-      ],
-      pump: [
-        { label: "Booster status", value: formatRegisterValue(values, registerMap, "BCS", { includeLabel: true }) },
-        { label: "Tank level", value: formatRegisterValue(values, registerMap, "LCTL") },
-        { label: "Available pumps", value: formatRegisterValue(values, registerMap, "MPAN") },
-        { label: "Staged pumps", value: formatRegisterValue(values, registerMap, "MPSN") },
-        { label: "Next staged pump", value: formatRegisterValue(values, registerMap, "PNTS") },
-        { label: "Next destaged pump", value: formatRegisterValue(values, registerMap, "PNTD") },
-        { label: "Lead pump", value: formatRegisterValue(values, registerMap, "PLID") },
-        { label: "Highest efficiency", value: formatRegisterValue(values, registerMap, "EFYK", { divisor: 10, suffix: "%" }) },
-        { label: "Lowest efficiency", value: formatRegisterValue(values, registerMap, "EFYJ", { divisor: 10, suffix: "%" }) },
-      ],
-      diagnostics: [
-        { label: "Last fault", value: formatRegisterValue(values, registerMap, "LFT", { includeLabel: true }) },
-        { label: "Last warning", value: formatRegisterValue(values, registerMap, "LALR", { includeLabel: true }) },
-        { label: "Fieldbus fault", value: formatRegisterValue(values, registerMap, "CNF", { includeLabel: true }) },
-        { label: "Ethernet error", value: formatRegisterValue(values, registerMap, "ERR", { includeLabel: true }) },
-        { label: "Ethernet fault", value: formatRegisterValue(values, registerMap, "ETHF", { includeLabel: true }) },
-        { label: "Trip journal", value: formatRegisterValue(values, registerMap, "TJD") },
-        { label: "Number of starts", value: formatRegisterValue(values, registerMap, "NSM") },
-      ],
-    };
+  function buildOverviewItem(spec, values, registerMap) {
+    if (!spec || typeof spec !== "object") {
+      return [];
+    }
+    const kind = String(spec["kind"] || "register");
+    if (kind === "register") {
+      return [{
+        label: String(spec["label"] || ""),
+        value: formatRegisterValue(values, registerMap, String(spec["code"] || ""), {
+          divisor: spec["divisor"],
+          suffix: spec["suffix"],
+          includeLabel: spec["includeLabel"] === true,
+        }),
+      }];
+    }
+    if (kind === "wordState") {
+      const [value, detail] = wordState(values, String(spec["code"] || ""));
+      return [{
+        label: String(spec["label"] || ""),
+        value,
+        detail,
+      }];
+    }
+    if (kind === "bitState") {
+      const entry = values[String(spec["code"] || "")];
+      const raw = entry ? entry.raw : null;
+      return [{
+        label: String(spec["label"] || ""),
+        value: formatBitState(raw, Number(spec["bit"] || 0)),
+      }];
+    }
+    if (kind === "bitLabels") {
+      const code = String(spec["code"] || "");
+      const entry = values[code];
+      const register = registerMap[code] || {};
+      if (!entry || typeof entry.raw !== "number") {
+        return [];
+      }
+      return parseBitLabels(register.notes || []).map(([bit, label]) => ({
+        label,
+        value: formatBitState(entry.raw, bit),
+      }));
+    }
+    return [];
+  }
+
+  function buildOverview(overviewSpec, values, registerMap) {
+    const spec = overviewSpec && typeof overviewSpec === "object" ? overviewSpec : {};
+    const overview = {};
+    Object.keys(spec).forEach((group) => {
+      const items = [];
+      for (const itemSpec of Array.isArray(spec[group]) ? spec[group] : []) {
+        items.push(...buildOverviewItem(itemSpec, values, registerMap));
+      }
+      overview[group] = items;
+    });
+    return overview;
   }
 
   function decodeRegisterValue(raw, signed, wordCount) {
@@ -571,6 +565,9 @@
             break;
           }
         }
+        if (!label && register.value_format === "bitstring" && typeof decoded.raw === "number") {
+          label = bitmaskLabel(register, decoded.raw);
+        }
         values[code] = {
           raw: decoded.raw,
           value: decoded.value,
@@ -621,14 +618,14 @@
       return buildBootstrap(bundle);
     },
     async loadOverview(state) {
-      await ensureBundle(state);
-      const bootstrap = buildBootstrap(state.staticBundle);
+      const bundle = await ensureBundle(state);
+      const bootstrap = buildBootstrap(bundle);
       const codes = (bootstrap.catalog && bootstrap.catalog.monitorCodes) || [];
       const result = await readMany(state, codes);
       return {
         ok: true,
         values: result.values,
-        overview: deriveOverview(result.values, state.staticRegisterMap || {}),
+        overview: buildOverview((((bundle.bootstrap || {}).ui || {}).overviewSpec || {}, result.values, state.staticRegisterMap || {}),
       };
     },
     async loadReference(state) {
@@ -645,20 +642,7 @@
       if (options.writableOnly) {
         items = items.filter((item) => item.writable);
       }
-      items.sort((left, right) => {
-        if (left.block !== right.block) {
-          return String(left.block || "").localeCompare(String(right.block || ""));
-        }
-        if (left.subgroup !== right.subgroup) {
-          return String(left.subgroup || "").localeCompare(String(right.subgroup || ""));
-        }
-        const leftAddress = Number(left.address);
-        const rightAddress = Number(right.address);
-        if (leftAddress !== rightAddress) {
-          return leftAddress - rightAddress;
-        }
-        return String(left.code || "").localeCompare(String(right.code || ""));
-      });
+      items.sort((left, right) => Number(left.sort_index || 0) - Number(right.sort_index || 0));
       return { ok: true, total: items.length, items };
     },
     async loadValues(state, codes) {

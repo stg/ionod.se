@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Altivar Process 630 Console</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Modbus Drive Console</title>
+  <link rel="stylesheet" href="../modbus/styles.css">
 </head>
 <body>
   <div class="shell">
     <aside class="sidebar">
       <div class="brand">
-        <div class="eyebrow">ATV630</div>
-        <h1>Altivar Process 630</h1>
+        <div id="brandEyebrow" class="eyebrow">Drive</div>
+        <h1 id="brandTitle">Modbus Drive</h1>
         <p id="transportMeta"></p>
       </div>
       <nav id="nav"></nav>
@@ -36,12 +36,12 @@
     </main>
   </div>
   <script>
-window.REPLICA_STATIC_CONFIG = {
-  bundleUrl: "./bundle.json",
-  loginUrl: "../index.html"
-};
-</script>
-<script src="static_runtime.js"></script>
-  <script src="app.js"></script>
+  window.REPLICA_STATIC_CONFIG = {
+    bundleUrl: "./bundle.json",
+    loginUrl: "../index.html"
+  };
+  </script>
+  <script src="../modbus/static_runtime.js"></script>
+  <script src="../modbus/app.js"></script>
 </body>
 </html>
