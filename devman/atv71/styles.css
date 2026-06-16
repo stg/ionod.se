@@ -366,7 +366,8 @@ button.secondary{
 }
 
 .table-wrap{
-  overflow:auto;
+  overflow-x:auto;
+  overflow-y:hidden;
   border-radius:18px;
   border:1px solid var(--line);
   background:#fff;
@@ -376,16 +377,17 @@ table{width:100%;border-collapse:collapse}
 
 .register-table{
   width:100%;
-  table-layout:auto;
+  min-width:100%;
+  table-layout:fixed;
 }
 
 .register-table .col-code{width:6ch}
 .register-table .col-address{width:7ch}
 .register-table .col-access{width:18ch}
-.register-table .col-name{width:24ch}
+.register-table .col-name{width:18%}
 .register-table .col-value{width:14ch}
 .register-table .col-write{width:14ch}
-.register-table .col-model{width:24ch}
+.register-table .col-model{width:auto}
 
 th,td{
   padding:11px 12px;
@@ -450,16 +452,20 @@ tr:hover td{background:#fcfaf6}
 .col-code-cell,
 .col-address-cell,
 .col-access-cell,
-.col-value-cell{
+.col-value-cell,
+.col-write-cell{
   width:1%;
 }
 
 .col-name-cell{
   min-width:20ch;
+  overflow:hidden;
 }
 
 .model-meta-cell{
-  min-width:18rem;
+  min-width:14rem;
+  width:auto;
+  overflow:hidden;
 }
 
 .model-label{
@@ -515,8 +521,9 @@ td .inline-unit{
 .write-cell{display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
 
 .write-cell input,.write-cell select{
-  width:auto;
-  min-width:10ch;
+  width:14ch;
+  min-width:14ch;
+  max-width:14ch;
   padding:8px 10px;
   border-radius:10px;
   border:1px solid var(--line);
