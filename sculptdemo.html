@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sculpt Control Demo</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --page-bg: radial-gradient(circle at top, #3a3a3a 0%, #161616 55%, #090909 100%);
+      --panel-bg: rgba(255, 255, 255, 0.06);
+      --panel-border: rgba(255, 255, 255, 0.12);
+      --text: #f2f2f2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--page-bg);
+      color: var(--text);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .stage {
+      display: grid;
+      gap: 1rem;
+      justify-items: center;
+      min-height: 460px;
+      padding: 2rem 3.5rem 2.5rem;
+      background:
+        radial-gradient(circle at var(--light-x, 50%) 0%,
+          rgba(255, 255, 220, 0.24) 0%,
+          rgba(255, 255, 220, 0.12) 18%,
+          rgba(255, 255, 255, 0.05) 34%,
+          rgba(255, 255, 255, 0.02) 48%,
+          rgba(255, 255, 255, 0.00) 62%),
+        var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 24px;
+      backdrop-filter: blur(12px);
+    }
+
+    .stage-layout {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .stage-main {
+      display: grid;
+      gap: 1rem;
+      justify-items: center;
+    }
+
+    .controls {
+      width: min(420px, 80vw);
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    .controls label {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .controls input[type="range"] {
+      width: 100%;
+    }
+
+    .side-controls {
+      display: grid;
+      justify-items: center;
+      align-content: start;
+      gap: 0.5rem;
+      padding-top: 0.25rem;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 0.9rem;
+    }
+
+    .side-controls .value {
+      min-width: 8ch;
+      text-align: center;
+      display: inline-block;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .side-controls input[type="range"] {
+      writing-mode: vertical-lr;
+      direction: rtl;
+      width: 32px;
+      height: 220px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+      min-height: 220px;
+      width: min(840px, 88vw);
+    }
+
+    .sculpt-button {
+      display: inline-grid;
+      justify-items: center;
+      gap: var(--sculpt-button-gap, 10px);
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .sculpt-button-frame {
+      width: min(100%, var(--sculpt-button-natural-width));
+      aspect-ratio: var(--sculpt-button-aspect);
+      max-width: 100%;
+    }
+
+    .sculpt-button svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .sculpt-button-allow-grow .sculpt-button-frame {
+      width: 100%;
+    }
+
+    .sculpt-button:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.45);
+      outline-offset: 4px;
+    }
+
+    .sculpt-button-label {
+      font: inherit;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .sculpt-button:disabled,
+    .sculpt-button-disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="stage-layout">
+      <div class="stage-main">
+        <div id="button-host" class="button-row"></div>
+        <div id="status">Press a control</div>
+        <div class="controls">
+          <label for="light-angle">
+            <span>Light position</span>
+            <span id="light-angle-value">50%</span>
+          </label>
+          <input id="light-angle" type="range" min="0" max="100" step="1" value="50">
+        </div>
+      </div>
+      <div class="side-controls">
+        <span>Angle</span>
+        <span id="tilt-angle-value" class="value">36.0 deg</span>
+        <input id="tilt-angle" type="range" min="0" max="45" step="0.1" value="36">
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const App = {
+      ui: {}
+    };
+  </script>
+  <script src="../projects/multi-pump/web/src/pages/index/js/ui/sculpt_button.js"></script>
+  <script src="../projects/multi-pump/web/src/pages/index/js/ui/sculpt_rotary.js"></script>
+  <script>
+    const status = document.getElementById("status");
+    const host = document.getElementById("button-host");
+    const stage = document.querySelector(".stage");
+    const stageMain = document.querySelector(".stage-main");
+    const lightAngleInput = document.getElementById("light-angle");
+    const lightAngleValue = document.getElementById("light-angle-value");
+    const tiltAngleInput = document.getElementById("tilt-angle");
+    const tiltAngleValue = document.getElementById("tilt-angle-value");
+
+    const buttonDefaults = App.ui.sculptButton.defaults;
+    const rotaryDefaults = App.ui.sculptRotary.defaults;
+
+    function nowText() {
+      return new Date().toLocaleTimeString();
+    }
+
+    const demoButton = App.ui.sculptButton.create({
+      width: buttonDefaults.width,
+      ariaLabel: "Activate demo sculpt button",
+      lightAngle: 28,
+      angle: 36,
+      buttonInset: 180,
+      baseColor: "#808080",
+      buttonColor: "#afff00",
+      lineColor: "#000000",
+      onClick: () => {
+        status.textContent = `Pressed at ${nowText()}`;
+      }
+    });
+
+    const demoButtonAlt = App.ui.sculptButton.create({
+      width: buttonDefaults.width,
+      ariaLabel: "Activate alternate sculpt button",
+      lightAngle: 28,
+      angle: 36,
+      buttonInset: 180,
+      baseColor: "#5f6f86",
+      buttonColor: "#ff7a18",
+      lineColor: "#000000",
+      onClick: () => {
+        status.textContent = `Alternate pressed at ${nowText()}`;
+      }
+    });
+
+    const demoRotary = App.ui.sculptRotary.create({
+      width: rotaryDefaults.width,
+      ariaLabel: "Activate demo rotary switch",
+      lightAngle: 28,
+      angle: 36,
+      buttonInset: 180,
+      baseColor: "#808080",
+      buttonColor: "#ffe55c",
+      lineColor: "#000000",
+      switchAngles: [30, 90, 150],
+      switchLabels: ["A", "B", "C"],
+      onClick: () => {
+        const props = demoRotary.getProps();
+        status.textContent = `Rotary value ${props.value} (${props.switchLabels[props.value]}) at ${nowText()}`;
+      }
+    });
+
+    const demoControls = [
+      demoButton,
+      demoButtonAlt,
+      demoRotary
+    ];
+
+    demoControls.forEach(control => {
+      host.appendChild(control.element);
+    });
+
+    function updateButtonWidths() {
+      const gapPx = 24;
+      const maxWidth = buttonDefaults.width;
+      const minWidth = 120;
+      const availableWidth = stageMain.clientWidth;
+      const controlCount = demoControls.length;
+      const nextWidth = Math.max(
+        minWidth,
+        Math.min(maxWidth, (availableWidth - (gapPx * (controlCount - 1))) / controlCount)
+      );
+
+      demoControls.forEach(control => {
+        control.setProps({ width: nextWidth });
+      });
+    }
+
+    function updateLightSource() {
+      const lightPercent = Number(lightAngleInput.value);
+      lightAngleValue.textContent = `${lightPercent}%`;
+      stage.style.setProperty("--light-x", `${lightPercent}%`);
+
+      const stageRect = stage.getBoundingClientRect();
+      const sourcePoint = {
+        x: stageRect.left + (stageRect.width * (lightPercent / 100)),
+        y: stageRect.top
+      };
+
+      demoControls.forEach(control => {
+        control.setLightPosition(sourcePoint);
+      });
+    }
+
+    lightAngleInput.addEventListener("input", updateLightSource);
+    tiltAngleInput.addEventListener("input", () => {
+      const nextAngle = Number(tiltAngleInput.value);
+      tiltAngleValue.textContent = `${nextAngle.toFixed(1)} deg`;
+      demoControls.forEach(control => {
+        control.setProps({ angle: nextAngle });
+      });
+    });
+
+    tiltAngleValue.textContent = `${Number(tiltAngleInput.value).toFixed(1)} deg`;
+    window.addEventListener("resize", updateButtonWidths);
+    updateButtonWidths();
+    updateLightSource();
+  </script>
+</body>
+</html>

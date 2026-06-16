@@ -243,6 +243,34 @@ function syncSetupWriteControls() {
   });
 }
 
+let dragDepth = 0;
+
+function hasDraggedFiles(dataTransfer) {
+  if (!dataTransfer) {
+    return false;
+  }
+  if (dataTransfer.files && dataTransfer.files.length) {
+    return true;
+  }
+  const types = dataTransfer.types;
+  if (!types) {
+    return false;
+  }
+  if (typeof types.includes === "function") {
+    return types.includes("Files");
+  }
+  return typeof types.contains === "function" && types.contains("Files");
+}
+
+function setDragActive(active) {
+  document.body.classList.toggle("drag-accept", active);
+}
+
+function clearDragActive() {
+  dragDepth = 0;
+  setDragActive(false);
+}
+
 function setNodeTextIfChanged(node, value) {
   const next = value ?? "";
   if (node && node.textContent !== next) {
@@ -1197,24 +1225,46 @@ async function main() {
   $("liveToggle").addEventListener("change", (event) => {
     state.live = event.target.checked;
   });
-  window.addEventListener("dragover", (event) => {
-    if (!event.dataTransfer?.files?.length) {
+  window.addEventListener("dragenter", (event) => {
+    if (!hasDraggedFiles(event.dataTransfer)) {
       return;
     }
     event.preventDefault();
+    dragDepth += 1;
+    setDragActive(true);
+  });
+  window.addEventListener("dragover", (event) => {
+    if (!hasDraggedFiles(event.dataTransfer)) {
+      return;
+    }
+    event.preventDefault();
+    setDragActive(true);
     event.dataTransfer.dropEffect = "copy";
   });
-  window.addEventListener("drop", (event) => {
-    if (!event.dataTransfer?.files?.length) {
+  window.addEventListener("dragleave", (event) => {
+    if (!hasDraggedFiles(event.dataTransfer)) {
       return;
     }
     event.preventDefault();
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (!dragDepth) {
+      setDragActive(false);
+    }
+  });
+  window.addEventListener("drop", (event) => {
+    if (!hasDraggedFiles(event.dataTransfer)) {
+      return;
+    }
+    event.preventDefault();
+    clearDragActive();
     const file = [...event.dataTransfer.files].find((item) => /\.json$/i.test(item.name)) || event.dataTransfer.files[0];
     if (!file) {
       return;
     }
     void openProvisioningFile(file).catch((error) => setStatus(String(error), true));
   });
+  window.addEventListener("dragend", clearDragActive);
+  window.addEventListener("blur", clearDragActive);
   setInterval(() => {
     if (state.live) {
       refreshVisiblePage();
