@@ -57085,7 +57085,7 @@
         "[Sleep menu] (SLP-)"
       ],
       "display": "[Sleep Flow Level] (SLnL)",
-      "range": "[NO]:[SUFR]",
+      "range": "[No] (nO):[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -57362,7 +57362,7 @@
         "[Sleep menu] (SLP-)"
       ],
       "display": "[Sleep Pressure Level] (SLPL)",
-      "range": "[NO]:[SUPR]",
+      "range": "[No] (nO):[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -57391,7 +57391,7 @@
         "[Wake up menu] (W P-)"
       ],
       "display": "[Wake Up Press level] (WUPL)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -68594,7 +68594,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI2 Th Warn Level] (tH2A)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -68623,7 +68623,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI3 Th Warn Level] (tH3A)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -68652,7 +68652,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI4 Th Warn Level] (tH4A)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -68681,7 +68681,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI5 Th Warn Level] (tH5A)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -68710,7 +68710,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI2 Th Error Level] (tH2F)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -68739,7 +68739,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI3 Th Error Level] (tH3F)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -68768,7 +68768,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI4 Th Error Level] (tH4F)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -68797,7 +68797,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI5 Th Error Level] (tH5F)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -69107,7 +69107,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI2 Th Value] (tH2U)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -69137,7 +69137,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI3 Th Value] (tH3U)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -69167,7 +69167,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI4 Th Value] (tH4U)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -69197,7 +69197,7 @@
         "[Pump thermal monit] (tPP-)"
       ],
       "display": "[AI5 Th Value] (tH5U)",
-      "range": "[SUTP]",
+      "range": "[SUTP]:[SUTP]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -72222,7 +72222,7 @@
       "menu": "[Settings] (SEt-)",
       "menuTags": [],
       "display": "[Flow Lim Thd Active] (CHt)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -72249,7 +72249,7 @@
       "menu": "[Settings] (SEt-)",
       "menuTags": [],
       "display": "[FlowLim Thd Disable] (rCHt)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -73959,7 +73959,7 @@
         "[Process] (PrU-)"
       ],
       "display": "[Inlet Press. Value] (PS1U)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -73989,7 +73989,7 @@
         "[Process] (PrU-)"
       ],
       "display": "[Outlet Pressure] (PS2U)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -74018,7 +74018,7 @@
         "[Process] (PrU-)"
       ],
       "display": "[Installation Flow] (FS1U)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -74439,7 +74439,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Flow 1] (PCq1)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74468,7 +74468,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Flow 2] (PCq2)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74497,7 +74497,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Flow 3] (PCq3)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74526,7 +74526,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Flow 4] (PCq4)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74555,7 +74555,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Flow 5] (PCq5)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74584,7 +74584,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Head 1] (PCH1)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74613,7 +74613,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Head 2] (PCH2)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74642,7 +74642,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Head 3] (PCH3)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74671,7 +74671,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Head 4] (PCH4)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74700,7 +74700,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Head 5] (PCH5)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74874,7 +74874,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Head BEP] (PCbH)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -74903,7 +74903,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Flow at BEP] (PCbq)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -75744,7 +75744,7 @@
         "[Pipe fill] (PFI-)"
       ],
       "display": "[Pipe Fill Pressure] (PFHP)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -76507,7 +76507,7 @@
         "[Priming pump ctrl] (PPC-)"
       ],
       "display": "[Primed Inlet Level] (PPIL)",
-      "range": "[NO]:[SUPR]",
+      "range": "[No] (nO):[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -76640,7 +76640,7 @@
         "[Jockey pump] (J P-)"
       ],
       "display": "[Minimum Pressure] (JPrP)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -76698,7 +76698,7 @@
         "[Jockey pump] (J P-)"
       ],
       "display": "[Maximum Pressure] (JPSP)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -76859,7 +76859,7 @@
         "[Friction loss comp] (FLC-)"
       ],
       "display": "[Comp. at Point 1] (FLH1)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -76888,7 +76888,7 @@
         "[Friction loss comp] (FLC-)"
       ],
       "display": "[Flow at Point 1] (FLq1)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -76917,7 +76917,7 @@
         "[Friction loss comp] (FLC-)"
       ],
       "display": "[Static Compensation] (FLH0)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -76946,7 +76946,7 @@
         "[Friction loss comp] (FLC-)"
       ],
       "display": "[Delta Pressure] (FLPd)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -77615,7 +77615,7 @@
         "[Outlet pressure monitoring] (OPP-)"
       ],
       "display": "[OutPres Min Level] (OPPL)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -77644,7 +77644,7 @@
         "[Outlet pressure monitoring] (OPP-)"
       ],
       "display": "[OutPres Max Level] (OPPH)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -77812,7 +77812,7 @@
         "[High flow monitoring] (HFP-)"
       ],
       "display": "[HighFlow MaxLevel] (HFPL)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -78158,7 +78158,7 @@
         "[Inlet pressure monitoring] (IPP-)"
       ],
       "display": "[InletPres High Thd] (IPPH)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -78187,7 +78187,7 @@
         "[Inlet pressure monitoring] (IPP-)"
       ],
       "display": "[InletPres Low Thd] (IPPL)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -78216,7 +78216,7 @@
         "[Inlet pressure monitoring] (IPP-)"
       ],
       "display": "[InletPres Max Comp] (IPPC)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -80943,7 +80943,7 @@
         "[Pump low flow Monit] (PLF-)"
       ],
       "display": "[PumpLF Min Level] (PLFL)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
@@ -81451,7 +81451,7 @@
         "[Control] (Ctr-)"
       ],
       "display": "[Flow Estimated] (SLFU)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -81480,7 +81480,7 @@
         "[Pump characteristics] (PCr-)"
       ],
       "display": "[Head Estimated] (SLHU)",
-      "range": "[SUPR]",
+      "range": "[SUPR]:[SUPR]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -81600,7 +81600,7 @@
         "[Pump follow up] (PFU-)"
       ],
       "display": "[Energy Cons. Ind.] (ECI)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -81630,7 +81630,7 @@
         "[Pump follow up] (PFU-)"
       ],
       "display": "[Energy Perf. Ind] (EPI)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -81660,7 +81660,7 @@
         "[Process] (PrU-)"
       ],
       "display": "[Highest Flow] (FS1 )",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -81690,7 +81690,7 @@
         "[Process] (PrU-)"
       ],
       "display": "[Lowest Flow] (FS1J)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": false,
       "widget": "number",
@@ -90327,7 +90327,7 @@
         "[Level Control] (LCC-)"
       ],
       "display": "[Tank Volume] (LCtU)",
-      "range": "[SUFR]",
+      "range": "[SUFR]:[SUFR]",
       "readable": true,
       "writable": true,
       "widget": "number",
