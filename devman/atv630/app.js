@@ -636,16 +636,16 @@ function parameterRow(row) {
   }
   return `
     <tr>
-      <td class="monospace">${esc(row.code)}</td>
-      <td>${row.address}</td>
-      <td>${esc(accessMeta(row))}</td>
-      <td>
+      <td class="monospace col-code-cell">${esc(row.code)}</td>
+      <td class="col-address-cell">${row.address}</td>
+      <td class="col-access-cell">${esc(accessMeta(row))}</td>
+      <td class="col-name-cell">
         <strong>${esc(row.name)}</strong>
         <div class="small dim">${esc(row.display || "")}</div>
         ${row.explanation ? `<div class="small dim">${esc(row.explanation)}</div>` : ""}
       </td>
-      <td>${renderValueCell(row, current)}</td>
-      <td>${renderWriteCell(row, writer)}</td>
+      <td class="col-value-cell">${renderValueCell(row, current)}</td>
+      <td class="col-write-cell">${renderWriteCell(row, writer)}</td>
       <td class="model-meta-cell">
         ${modelMetaRow("Category", row.category)}
         ${row.menuTags.length ? `<div class="small dim menu-line"><span class="model-label">Menus:</span> ${row.menuTags.map(esc).join(" | ")}</div>` : ""}

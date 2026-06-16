@@ -375,23 +375,17 @@ button.secondary{
 table{width:100%;border-collapse:collapse}
 
 .register-table{
-  max-width:100%;
-  min-width:0;
-  table-layout:fixed;
+  width:100%;
+  table-layout:auto;
 }
 
-.register-table .col-code{width:9%}
-.register-table .col-address{width:8%}
-.register-table .col-access{width:9%}
-.register-table .col-name{width:24%}
-.register-table .col-value{width:14%}
-.register-table .col-write{width:11%}
-.register-table .col-model{width:25%}
-
-.register-table th,
-.register-table td{
-  overflow:hidden;
-}
+.register-table .col-code{width:6ch}
+.register-table .col-address{width:7ch}
+.register-table .col-access{width:18ch}
+.register-table .col-name{width:24ch}
+.register-table .col-value{width:14ch}
+.register-table .col-write{width:14ch}
+.register-table .col-model{width:24ch}
 
 th,td{
   padding:11px 12px;
@@ -445,11 +439,27 @@ tr:hover td{background:#fcfaf6}
 }
 
 .small{font-size:.88rem}
+.col-code-cell,
+.col-address-cell,
+.col-access-cell,
+.col-value-cell,
+.col-write-cell{
+  white-space:nowrap;
+}
+
+.col-code-cell,
+.col-address-cell,
+.col-access-cell,
+.col-value-cell{
+  width:1%;
+}
+
+.col-name-cell{
+  min-width:20ch;
+}
+
 .model-meta-cell{
-  min-width:0;
-  width:25%;
-  max-width:25%;
-  overflow:hidden;
+  min-width:18rem;
 }
 
 .model-label{
@@ -459,7 +469,6 @@ tr:hover td{background:#fcfaf6}
 
 .menu-line{
   display:block;
-  width:100%;
   max-width:100%;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -503,10 +512,11 @@ td .inline-unit{
   font-size:inherit;
   color:#7a6d5c;
 }
-.write-cell{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.write-cell{display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
 
 .write-cell input,.write-cell select{
-  width:180px;
+  width:auto;
+  min-width:10ch;
   padding:8px 10px;
   border-radius:10px;
   border:1px solid var(--line);
