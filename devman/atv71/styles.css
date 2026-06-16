@@ -249,17 +249,19 @@ button.secondary{
 .current-cell.provision-match{
   background:#2c8a57;
   border-radius:4px;
+  box-sizing:border-box;
   color:#fff;
   font-weight:700;
-  margin-left:4px;
+  padding-left:4px;
 }
 
 .current-cell.provision-mismatch{
   background:#b33a33;
   border-radius:4px;
+  box-sizing:border-box;
   color:#fff;
   font-weight:700;
-  margin-left:4px;
+  padding-left:4px;
 }
 
 .current-cell.provision-match .dim,
@@ -372,6 +374,31 @@ button.secondary{
 
 table{width:100%;border-collapse:collapse}
 
+.register-table{
+  table-layout:fixed;
+}
+
+.register-table th:nth-child(1),
+.register-table td:nth-child(1){width:9%}
+
+.register-table th:nth-child(2),
+.register-table td:nth-child(2){width:8%}
+
+.register-table th:nth-child(3),
+.register-table td:nth-child(3){width:9%}
+
+.register-table th:nth-child(4),
+.register-table td:nth-child(4){width:24%}
+
+.register-table th:nth-child(5),
+.register-table td:nth-child(5){width:14%}
+
+.register-table th:nth-child(6),
+.register-table td:nth-child(6){width:11%}
+
+.register-table th:nth-child(7),
+.register-table td:nth-child(7){width:25%}
+
 th,td{
   padding:11px 12px;
   border-bottom:1px solid #eee5d9;
@@ -427,6 +454,7 @@ tr:hover td{background:#fcfaf6}
 .model-meta-cell{
   width:25%;
   max-width:25%;
+  overflow:hidden;
 }
 
 .model-label{

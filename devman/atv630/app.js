@@ -464,7 +464,7 @@ function renderMonitoring() {
           </div>
         </div>
         <div class="table-wrap compact-table">
-          <table>
+          <table class="register-table">
             <thead><tr><th>Code</th><th>Address</th><th>Value</th><th>Raw</th><th>Label</th></tr></thead>
             <tbody>${renderMonitorTableRows(values)}</tbody>
           </table>
@@ -710,7 +710,7 @@ function renderSetup() {
           </div>
         </div>
         <div class="table-wrap">
-          <table>
+          <table class="register-table">
             <thead>
               <tr><th>Code</th><th>Address</th><th>Access</th><th>Name</th><th>Value</th><th>Write</th><th>Model</th></tr>
             </thead>
