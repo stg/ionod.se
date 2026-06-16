@@ -2,6 +2,7 @@ const state = {
   bootstrap: null,
   overview: null,
   registers: [],
+  allRegisters: null,
   registerCache: {},
   reference: null,
   staticBundle: null,
@@ -14,6 +15,7 @@ const state = {
   currentBlock: "",
   setupValuesLoading: false,
   setupValueRequestId: 0,
+  provisioning: null,
 };
 
 const staticRuntime = window.ReplicaStaticRuntime || null;
@@ -146,6 +148,7 @@ function clearCurrentCell(code) {
   delete state.registerCache[code];
   const cell = document.querySelector(`.current-cell[data-code="${CSS.escape(code)}"]`);
   if (row && cell) {
+    cell.classList.remove("provision-match", "provision-mismatch");
     cell.innerHTML = `<span class="dim">updating...</span>${scalingMeta(row).units ? ` <span class="small dim inline-unit">(${esc(scalingMeta(row).units)})</span>` : ""}`;
   }
 }
@@ -174,6 +177,56 @@ function syncWriteControlFromValue(code, valueInfo) {
   if (control.value !== textValue) {
     control.value = textValue;
   }
+}
+
+function hasProvisioningView() {
+  return !!state.provisioning;
+}
+
+function provisioningExpectedValue(code) {
+  if (!state.provisioning) {
+    return null;
+  }
+  return Object.prototype.hasOwnProperty.call(state.provisioning.expectedByCode, code)
+    ? state.provisioning.expectedByCode[code]
+    : null;
+}
+
+function provisioningWriteState(row, fallbackValue) {
+  if (!row?.writable) {
+    return { value: fallbackValue, edited: false };
+  }
+  const expected = provisioningExpectedValue(row.code);
+  if (expected === null || expected === undefined) {
+    return { value: fallbackValue, edited: false };
+  }
+  return { value: expected, edited: true };
+}
+
+function provisioningCurrentClass(row, current) {
+  const expected = provisioningExpectedValue(row.code);
+  if (expected === null || expected === undefined || !current) {
+    return "";
+  }
+  return Number(current.raw) === Number(expected) ? "provision-match" : "provision-mismatch";
+}
+
+function updateCurrentCellPresentation(cell, row) {
+  if (!cell || !row) {
+    return;
+  }
+  const current = currentValue(row.code);
+  const next = renderCurrentCellContent(row, current);
+  if (cell.innerHTML !== next) {
+    cell.innerHTML = next;
+  }
+  const comparisonClass = provisioningCurrentClass(row, current);
+  cell.classList.toggle("provision-match", comparisonClass === "provision-match");
+  cell.classList.toggle("provision-mismatch", comparisonClass === "provision-mismatch");
+}
+
+function shouldPreserveEditedState(code) {
+  return provisioningExpectedValue(code) !== null;
 }
 
 function syncSetupWriteControls() {
@@ -540,9 +593,10 @@ function renderValueMeta(row) {
 
 function renderValueCell(row, current) {
   const meta = scalingMeta(row);
+  const comparisonClass = provisioningCurrentClass(row, current);
   return `
     <div class="value-stack">
-      <div class="current-cell" data-code="${row.code}">
+      <div class="current-cell ${comparisonClass}" data-code="${row.code}">
         ${renderCurrentCellContent(row, current)}
       </div>
       ${meta.range ? `<div class="small dim value-meta">range ${esc(meta.range)}</div>` : ""}
@@ -562,17 +616,20 @@ function renderWriteCell(row, writer) {
 function parameterRow(row) {
   const current = currentValue(row.code);
   const currentRaw = current ? Number(current.raw) : null;
+  const writeState = provisioningWriteState(row, currentRaw);
+  const writeValue = writeState.value;
+  const editedAttr = writeState.edited ? ` data-user-edited="1"` : "";
   const options = (row.enum || []).map((item) => `
-    <option value="${item.value}" ${currentRaw === Number(item.value) ? "selected" : ""}>${esc(`${item.value} - ${item.display}`)}</option>
+    <option value="${item.value}" ${writeValue === Number(item.value) ? "selected" : ""}>${esc(`${item.value} - ${item.display}`)}</option>
   `).join("");
   let writer = `<span class="dim">read only</span>`;
   if (row.writable) {
     if (row.widget === "select") {
-      writer = `<select data-code="${row.code}" class="write-select">${options}</select><button data-code="${row.code}" class="write-btn">Write</button>`;
+      writer = `<select data-code="${row.code}" class="write-select"${editedAttr}>${options}</select><button data-code="${row.code}" class="write-btn">Write</button>`;
     } else if (row.widget === "checkbox") {
-      writer = `<select data-code="${row.code}" class="write-select"><option value="0" ${currentRaw === 0 ? "selected" : ""}>0</option><option value="1" ${currentRaw === 1 ? "selected" : ""}>1</option></select><button data-code="${row.code}" class="write-btn">Write</button>`;
+      writer = `<select data-code="${row.code}" class="write-select"${editedAttr}><option value="0" ${writeValue === 0 ? "selected" : ""}>0</option><option value="1" ${writeValue === 1 ? "selected" : ""}>1</option></select><button data-code="${row.code}" class="write-btn">Write</button>`;
     } else {
-      writer = `<input data-code="${row.code}" class="write-input" type="number" step="1" value="${currentRaw ?? ""}"><button data-code="${row.code}" class="write-btn">Write</button>`;
+      writer = `<input data-code="${row.code}" class="write-input" type="number" step="1" value="${writeValue ?? ""}"${editedAttr}><button data-code="${row.code}" class="write-btn">Write</button>`;
     }
   }
   return `
@@ -600,7 +657,7 @@ function renderParameterTableBody() {
   let lastBlock = "";
   let lastSubgroup = "";
   state.registers.forEach((row) => {
-    if (!state.currentBlock && row.block !== lastBlock) {
+    if ((hasProvisioningView() || !state.currentBlock) && row.block !== lastBlock) {
       rows.push(parameterBlockRow(row));
       lastBlock = row.block;
       lastSubgroup = "";
@@ -615,6 +672,10 @@ function renderParameterTableBody() {
 }
 
 function renderSetup() {
+  if (hasProvisioningView()) {
+    renderProvisioningSetup();
+    return;
+  }
   const groups = state.bootstrap.model.groups;
   const currentBlock = blockById(state.currentBlock);
   const blockLabel = currentBlock ? currentBlock.title : "All blocks";
@@ -692,18 +753,92 @@ function renderSetup() {
   bindCommonButtons();
 }
 
+function renderProvisioningSetup() {
+  const provisioning = state.provisioning;
+  const missingCount = provisioning?.missingAddresses.length || 0;
+  $("setupPage").innerHTML = `
+    <div class="group-shell">
+      <article class="card" id="setupFilterCard">
+        <div class="card-head">
+          <div>
+            <div class="eyebrow">Provisioning File</div>
+            <h3>${esc(provisioning.fileName || "Dropped JSON")}</h3>
+            <p class="small dim">${state.registers.length} matched registers, ${provisioning.writeSequence.length} queued writes${missingCount ? `, ${missingCount} unresolved addresses` : ""}.</p>
+          </div>
+          <div class="toolbar">
+            <button id="writeAllProvisionBtn">Write all provisioning values</button>
+            <button id="loadVisibleBtn" class="secondary">Load visible values</button>
+            <button id="closeProvisionBtn" class="secondary">Return to setup</button>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <div id="setupRegisterList" class="card-head">
+          <div>
+            <h3>Provisioning registers</h3>
+            <p class="small dim">Dropped provisioning expectations are prefilled in the Write column and protected from live overwrite.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Code</th><th>Address</th><th>Access</th><th>Name</th><th>Value</th><th>Write</th><th>Model</th></tr>
+            </thead>
+            <tbody>${renderParameterTableBody()}</tbody>
+          </table>
+        </div>
+      </article>
+    </div>
+  `;
+  $("loadVisibleBtn").addEventListener("click", async () => {
+    await loadCurrentRegisterValues();
+    updateSetupValueCells();
+  });
+  $("closeProvisionBtn").addEventListener("click", async () => {
+    await closeProvisioningView();
+  });
+  $("writeAllProvisionBtn").addEventListener("click", async () => {
+    await writeAllProvisioningValues();
+  });
+  bindWriteButtons();
+}
+
 function updateSetupValueCells() {
   document.querySelectorAll(".current-cell[data-code]").forEach((cell) => {
     const row = state.registers.find((item) => item.code === cell.dataset.code);
     if (!row) {
       return;
     }
-    const next = renderCurrentCellContent(row, currentValue(row.code));
-    if (cell.innerHTML !== next) {
-      cell.innerHTML = next;
-    }
+    updateCurrentCellPresentation(cell, row);
   });
   syncSetupWriteControls();
+}
+
+async function writeRegisterValue(code, value, input) {
+  try {
+    setStatus(`Writing ${code}...`);
+    clearCurrentCell(code);
+    const result = useStaticRuntime()
+      ? await staticRuntime.write(state, code, value)
+      : await getJson("/api/write", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, value }),
+      });
+    const readback = result.write?.readback;
+    if (readback) {
+      mergeRegisterCache({ [code]: readback });
+      if (input && !shouldPreserveEditedState(code)) {
+        delete input.dataset.userEdited;
+        syncWriteControlFromValue(code, readback);
+      }
+    }
+    updateSetupValueCells();
+    return result;
+  } catch (error) {
+    setStatus(String(error), true);
+    throw error;
+  }
 }
 
 function bindWriteButtons() {
@@ -723,22 +858,7 @@ function bindWriteButtons() {
       }
       const value = Number(input.value);
       try {
-        setStatus(`Writing ${code}...`);
-        clearCurrentCell(code);
-        const result = useStaticRuntime()
-          ? await staticRuntime.write(state, code, value)
-          : await getJson("/api/write", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code, value }),
-          });
-        const readback = result.write?.readback;
-        if (readback) {
-          mergeRegisterCache({ [code]: readback });
-          delete input.dataset.userEdited;
-          syncWriteControlFromValue(code, readback);
-        }
-        updateSetupValueCells();
+        await writeRegisterValue(code, value, input);
         setStatus(`Wrote ${code} = ${value}`);
         await loadOverview();
       } catch (error) {
@@ -746,6 +866,143 @@ function bindWriteButtons() {
       }
     });
   });
+}
+
+async function fetchRegisters(options = {}) {
+  const data = useStaticRuntime()
+    ? await staticRuntime.loadRegisters(state, options)
+    : await (async () => {
+      const params = new URLSearchParams();
+      if (options.block) {
+        params.set("block", options.block);
+      }
+      if (options.search) {
+        params.set("search", options.search);
+      }
+      if (options.writableOnly) {
+        params.set("writable", "1");
+      }
+      return getJson(`/api/registers?${params.toString()}`);
+    })();
+  return data.items || [];
+}
+
+async function loadAllRegisters() {
+  if (state.allRegisters?.length) {
+    return state.allRegisters;
+  }
+  state.allRegisters = await fetchRegisters({});
+  return state.allRegisters;
+}
+
+function normalizeProvisioningEntries(raw) {
+  if (!Array.isArray(raw)) {
+    throw new Error("Provisioning JSON must be an array.");
+  }
+  const entries = [];
+  raw.forEach((item) => {
+    if (!Array.isArray(item) || !item.length) {
+      return;
+    }
+    const address = Number(item[0]);
+    if (!Number.isFinite(address)) {
+      return;
+    }
+    const expected = item.length > 1 && Number.isFinite(Number(item[1])) ? Number(item[1]) : null;
+    entries.push({
+      address,
+      expected,
+      raw: item,
+    });
+  });
+  if (!entries.length) {
+    throw new Error("Provisioning JSON did not contain any valid address rows.");
+  }
+  return entries;
+}
+
+async function openProvisioningFile(file) {
+  const text = await file.text();
+  const parsed = JSON.parse(text);
+  const entries = normalizeProvisioningEntries(parsed);
+  const allRegisters = await loadAllRegisters();
+  const byAddress = new Map();
+  allRegisters.forEach((row) => {
+    const address = Number(row.address);
+    if (!byAddress.has(address)) {
+      byAddress.set(address, row);
+    }
+  });
+  const includedCodes = new Set();
+  const expectedByCode = {};
+  const writeSequence = [];
+  const missingAddresses = [];
+  entries.forEach((entry) => {
+    const row = byAddress.get(entry.address);
+    if (!row) {
+      missingAddresses.push(entry.address);
+      return;
+    }
+    entry.code = row.code;
+    entry.row = row;
+    includedCodes.add(row.code);
+    if (entry.expected !== null) {
+      expectedByCode[row.code] = entry.expected;
+      writeSequence.push({
+        code: row.code,
+        address: entry.address,
+        value: entry.expected,
+        writable: !!row.writable,
+      });
+    }
+  });
+  const subset = allRegisters.filter((row) => includedCodes.has(row.code));
+  if (!subset.length) {
+    throw new Error("Provisioning JSON did not match any known registers.");
+  }
+  state.provisioning = {
+    fileName: file.name || "provisioning.json",
+    entries,
+    expectedByCode,
+    writeSequence,
+    missingAddresses,
+  };
+  state.registers = subset;
+  invalidateSetupValues();
+  renderSetup();
+  showPage("setup");
+  ensureSetupValuesLoadedSoon();
+  setStatus(`Loaded provisioning file with ${subset.length} matched registers${missingAddresses.length ? ` and ${missingAddresses.length} unresolved addresses` : ""}.`);
+}
+
+async function closeProvisioningView() {
+  state.provisioning = null;
+  invalidateSetupValues();
+  await loadRegisters();
+  renderSetup();
+  showPage("setup");
+  focusSetupFilterCard();
+  ensureSetupValuesLoadedSoon();
+  setStatus("Returned to normal setup view.");
+}
+
+async function writeAllProvisioningValues() {
+  if (!state.provisioning) {
+    return;
+  }
+  const sequence = state.provisioning.writeSequence.filter((item) => item.writable);
+  if (!sequence.length) {
+    setStatus("No writable provisioning values were found in the dropped file.", true);
+    return;
+  }
+  for (let index = 0; index < sequence.length; index += 1) {
+    const item = sequence[index];
+    const input = document.querySelector(`.write-input[data-code="${CSS.escape(item.code)}"], .write-select[data-code="${CSS.escape(item.code)}"]`);
+    setStatus(`Writing provisioning value ${index + 1}/${sequence.length}: ${item.code}...`);
+    await writeRegisterValue(item.code, item.value, input);
+  }
+  setStatus(`Wrote ${sequence.length} provisioning values.`);
+  await loadOverview();
 }
 
 function bindCommonButtons() {
@@ -833,26 +1090,11 @@ async function loadOverview() {
 }
 
 async function loadRegisters() {
-  const data = useStaticRuntime()
-    ? await staticRuntime.loadRegisters(state, {
-      block: state.currentBlock,
-      search: state.search,
-      writableOnly: state.writableOnly,
-    })
-    : await (async () => {
-      const params = new URLSearchParams();
-      if (state.currentBlock) {
-        params.set("block", state.currentBlock);
-      }
-      if (state.search) {
-        params.set("search", state.search);
-      }
-      if (state.writableOnly) {
-        params.set("writable", "1");
-      }
-      return getJson(`/api/registers?${params.toString()}`);
-    })();
-  state.registers = data.items;
+  state.registers = await fetchRegisters({
+    block: state.currentBlock,
+    search: state.search,
+    writableOnly: state.writableOnly,
+  });
 }
 
 async function loadCurrentRegisterValues() {
@@ -954,6 +1196,24 @@ async function main() {
   $("refreshBtn").addEventListener("click", refreshVisiblePage);
   $("liveToggle").addEventListener("change", (event) => {
     state.live = event.target.checked;
+  });
+  window.addEventListener("dragover", (event) => {
+    if (!event.dataTransfer?.files?.length) {
+      return;
+    }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+  });
+  window.addEventListener("drop", (event) => {
+    if (!event.dataTransfer?.files?.length) {
+      return;
+    }
+    event.preventDefault();
+    const file = [...event.dataTransfer.files].find((item) => /\.json$/i.test(item.name)) || event.dataTransfer.files[0];
+    if (!file) {
+      return;
+    }
+    void openProvisioningFile(file).catch((error) => setStatus(String(error), true));
   });
   setInterval(() => {
     if (state.live) {

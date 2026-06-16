@@ -246,6 +246,16 @@ button.secondary{
 
 .kv:last-child{border-bottom:0}
 
+.current-cell.provision-match{
+  color:var(--brand-dark);
+  font-weight:700;
+}
+
+.current-cell.provision-mismatch{
+  color:var(--danger);
+  font-weight:700;
+}
+
 .chip,
 .stat-pill{
   display:inline-flex;
