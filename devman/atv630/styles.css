@@ -385,11 +385,11 @@ table{width:100%;border-collapse:collapse}
   grid-template-columns:
     minmax(max-content, 1fr)
     minmax(max-content, 1fr)
-    minmax(max-content, 3fr)
-    minmax(max-content, 3fr)
     minmax(max-content, 2fr)
     minmax(max-content, 2fr)
-    minmax(14rem, 3fr);
+    minmax(max-content, 2fr)
+    minmax(max-content, 2fr)
+    minmax(14rem, 2fr);
   min-width:100%;
 }
 
@@ -533,9 +533,9 @@ th{
 .write-cell{display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
 
 .write-cell input,.write-cell select{
-  width:14ch;
-  min-width:14ch;
-  max-width:14ch;
+  width:180px;
+  min-width:180px;
+  max-width:180px;
   padding:8px 10px;
   border-radius:10px;
   border:1px solid var(--line);
