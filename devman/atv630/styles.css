@@ -247,13 +247,24 @@ button.secondary{
 .kv:last-child{border-bottom:0}
 
 .current-cell.provision-match{
-  color:var(--brand-dark);
+  background:#2c8a57;
+  border-radius:10px;
+  color:#fff;
   font-weight:700;
 }
 
 .current-cell.provision-mismatch{
-  color:var(--danger);
+  background:#b33a33;
+  border-radius:10px;
+  color:#fff;
   font-weight:700;
+}
+
+.current-cell.provision-match .dim,
+.current-cell.provision-match .inline-unit,
+.current-cell.provision-mismatch .dim,
+.current-cell.provision-mismatch .inline-unit{
+  color:#fff;
 }
 
 .chip,
