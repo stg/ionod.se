@@ -737,6 +737,15 @@ function renderSetup() {
         </div>
         <div class="table-wrap">
           <table class="register-table">
+            <colgroup>
+              <col class="col-code">
+              <col class="col-address">
+              <col class="col-access">
+              <col class="col-name">
+              <col class="col-value">
+              <col class="col-write">
+              <col class="col-model">
+            </colgroup>
             <thead>
               <tr><th>Code</th><th>Address</th><th>Access</th><th>Name</th><th>Value</th><th>Write</th><th>Model</th></tr>
             </thead>
@@ -808,7 +817,16 @@ function renderProvisioningSetup() {
           </div>
         </div>
         <div class="table-wrap">
-          <table>
+          <table class="register-table">
+            <colgroup>
+              <col class="col-code">
+              <col class="col-address">
+              <col class="col-access">
+              <col class="col-name">
+              <col class="col-value">
+              <col class="col-write">
+              <col class="col-model">
+            </colgroup>
             <thead>
               <tr><th>Code</th><th>Address</th><th>Access</th><th>Name</th><th>Value</th><th>Write</th><th>Model</th></tr>
             </thead>

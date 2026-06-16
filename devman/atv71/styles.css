@@ -375,29 +375,23 @@ button.secondary{
 table{width:100%;border-collapse:collapse}
 
 .register-table{
+  max-width:100%;
+  min-width:0;
   table-layout:fixed;
 }
 
-.register-table th:nth-child(1),
-.register-table td:nth-child(1){width:9%}
+.register-table .col-code{width:9%}
+.register-table .col-address{width:8%}
+.register-table .col-access{width:9%}
+.register-table .col-name{width:24%}
+.register-table .col-value{width:14%}
+.register-table .col-write{width:11%}
+.register-table .col-model{width:25%}
 
-.register-table th:nth-child(2),
-.register-table td:nth-child(2){width:8%}
-
-.register-table th:nth-child(3),
-.register-table td:nth-child(3){width:9%}
-
-.register-table th:nth-child(4),
-.register-table td:nth-child(4){width:24%}
-
-.register-table th:nth-child(5),
-.register-table td:nth-child(5){width:14%}
-
-.register-table th:nth-child(6),
-.register-table td:nth-child(6){width:11%}
-
-.register-table th:nth-child(7),
-.register-table td:nth-child(7){width:25%}
+.register-table th,
+.register-table td{
+  overflow:hidden;
+}
 
 th,td{
   padding:11px 12px;
@@ -452,6 +446,7 @@ tr:hover td{background:#fcfaf6}
 
 .small{font-size:.88rem}
 .model-meta-cell{
+  min-width:0;
   width:25%;
   max-width:25%;
   overflow:hidden;
@@ -464,6 +459,7 @@ tr:hover td{background:#fcfaf6}
 
 .menu-line{
   display:block;
+  width:100%;
   max-width:100%;
   overflow:hidden;
   text-overflow:ellipsis;
