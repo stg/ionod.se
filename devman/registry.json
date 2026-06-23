@@ -1,6 +1,13 @@
 {
   "supportedDevices": [
     {
+      "device": "atv61",
+      "protocol": "modbus",
+      "title": "Altivar 61",
+      "path": "atv61/",
+      "defaultUnitId": 0
+    },
+    {
       "device": "atv71",
       "protocol": "modbus",
       "title": "Altivar 71",

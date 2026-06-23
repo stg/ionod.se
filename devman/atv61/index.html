@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modbus Drive Console</title>
+  <link rel="stylesheet" href="../modbus/styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div id="brandEyebrow" class="eyebrow">Drive</div>
+        <h1 id="brandTitle">Modbus Drive</h1>
+        <p id="transportMeta"></p>
+      </div>
+      <nav id="nav"></nav>
+    </aside>
+    <main class="main">
+      <div class="topbar">
+        <header class="masthead">
+          <div>
+            <div class="eyebrow">Drive Console</div>
+            <h2 id="pageTitle">Home</h2>
+          </div>
+          <div class="masthead-actions">
+            <button id="refreshBtn">Refresh</button>
+            <label class="toggle"><input id="liveToggle" type="checkbox" checked> Live</label>
+          </div>
+        </header>
+        <section id="statusBar" class="statusbar"></section>
+      </div>
+      <section id="homePage" class="page"></section>
+      <section id="monitoringPage" class="page hidden"></section>
+      <section id="setupPage" class="page hidden"></section>
+    </main>
+  </div>
+  <script>
+  window.REPLICA_STATIC_CONFIG = {
+    bundleUrl: "./bundle.json",
+    loginUrl: "../index.html"
+  };
+  </script>
+  <script src="../modbus/static_runtime.js"></script>
+  <script src="../modbus/app.js"></script>
+</body>
+</html>
