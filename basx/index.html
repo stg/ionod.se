@@ -109,19 +109,19 @@
     .capability { min-height: 230px; padding: 1.45rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); transition: transform .2s ease, box-shadow .2s ease; }
     .capability:hover { transform: translateY(-5px); box-shadow: 0 18px 32px rgba(24,56,61,.09); }
     .icon { width: 43px; height: 43px; display: grid; place-items: center; margin-bottom: 2.2rem; border-radius: 13px; background: var(--mint); color: #2c6950; }
-    .icon::before { content: ""; width: 29px; height: 29px; background: var(--icon) center / contain no-repeat; }
-    .capability:nth-child(1) .icon { --icon: url("assets/icons/capability-01.png"); background: #d9f2df; color: #286348; }
-    .capability:nth-child(2) .icon { --icon: url("assets/icons/capability-02.png"); background: #fff0e3; color: #aa5629; }
-    .capability:nth-child(3) .icon { --icon: url("assets/icons/capability-03.png"); background: #eeeaff; color: #6252a3; }
-    .capability:nth-child(4) .icon { --icon: url("assets/icons/capability-04.png"); background: #e3f1ff; color: #376c9a; }
-    .capability:nth-child(5) .icon { --icon: url("assets/icons/capability-05.png"); background: #fff5c9; color: #8b6b12; }
-    .capability:nth-child(6) .icon { --icon: url("assets/icons/capability-06.png"); background: #ffe4df; color: #a84e43; }
-    .capability:nth-child(7) .icon { --icon: url("assets/icons/capability-07.png"); background: #f4e5fa; color: #7d4d91; }
-    .capability:nth-child(8) .icon { --icon: url("assets/icons/capability-08.png"); background: #dff5f3; color: #24736c; }
-    .capability:nth-child(9) .icon { --icon: url("assets/icons/capability-09.png"); background: #fbe3ed; color: #98516f; }
-    .capability:nth-child(10) .icon { --icon: url("assets/icons/capability-10.png"); background: #e8efd5; color: #61722d; }
-    .capability:nth-child(11) .icon { --icon: url("assets/icons/capability-11.png"); background: #ffe9d4; color: #986137; }
-    .capability:nth-child(12) .icon { --icon: url("assets/icons/capability-12.png"); background: #e5edf0; color: #45656f; }
+    .capability-icon { display: block; width: 29px; height: 29px; }
+    .capability:nth-child(1) .icon { background: #d9f2df; color: #286348; }
+    .capability:nth-child(2) .icon { background: #fff0e3; color: #aa5629; }
+    .capability:nth-child(3) .icon { background: #eeeaff; color: #6252a3; }
+    .capability:nth-child(4) .icon { background: #e3f1ff; color: #376c9a; }
+    .capability:nth-child(5) .icon { background: #fff5c9; color: #8b6b12; }
+    .capability:nth-child(6) .icon { background: #ffe4df; color: #a84e43; }
+    .capability:nth-child(7) .icon { background: #f4e5fa; color: #7d4d91; }
+    .capability:nth-child(8) .icon { background: #dff5f3; color: #24736c; }
+    .capability:nth-child(9) .icon { background: #fbe3ed; color: #98516f; }
+    .capability:nth-child(10) .icon { background: #e8efd5; color: #61722d; }
+    .capability:nth-child(11) .icon { background: #ffe9d4; color: #986137; }
+    .capability:nth-child(12) .icon { background: #e5edf0; color: #45656f; }
     h3 { margin-bottom: .55rem; font-size: 1.1rem; letter-spacing: -.025em; }
     .capability p { margin: 0; color: var(--ink-soft); font-size: .91rem; }
 
@@ -283,18 +283,18 @@
           <p>BASx arbetar direkt med DUC:en. Funktionerna nedan är på plats, används i praktiskt ingenjörsarbete och skapar värde även i avancerade uppgifter.</p>
         </div>
         <div class="capability-grid">
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Direkt mot BAS2 och BAS3</h3><p>Arbetar direkt mot BAS2- och BAS3-DUC:er via TCP, USB eller HTTP — med samma agentiska arbetssätt oavsett anslutning.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Programmera från funktion</h3><p>Översätter en funktionsbeskrivning till I/O, objekt och PLC-logik — steg för steg och granskningsbart.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Konfigurera all I/O från en plintlista</h3><p>Läser plintlistan, mappar signalerna och konfigurerar automatiskt anläggningens I/O med rätt kanaler, signalnamn, typer och skalning.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Förstå befintliga anläggningar</h3><p>Hämtar information ur DUC:en och producerar en funktionsbeskrivning av det som redan finns.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Justera med precision</h3><p>Identifierar rätt objekt och parametrar, förklarar konsekvensen och genomför godkända ändringar med precision.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Analysera problem</h3><p>Analyserar anläggningsvärden och loggar, hittar mönster och presenterar välgrundade orsaker och åtgärder.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Arbeta med bilder</h3><p>Ritar processbilder från grunden eller efter exempel, granskar befintliga bilder och hittar fel och förbättringsmöjligheter.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Konfigurera Modbus</h3><p>Tolkar underlag och bygger Modbus-konfigurationer mot aggregat, med noggrann kontroll av register och skalning.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Jämför och kopiera mellan anläggningar</h3><p>Jämför funktionalitet mellan anläggningar och kopierar aggregat med funktion, objekt och bild som utgångspunkt.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Följ upp åtgärder</h3><p>Går igenom loggar, tar fram åtgärder och dokumenterar vad som ska kontrolleras efteråt.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Prata som du vill</h3><p>Beskriv problemet på svenska, engelska eller ett annat språk. Det viktiga är att dialogen blir begriplig för dig.</p></article>
-          <article class="capability"><div class="icon" aria-hidden="true"></div><h3>Planera genomtänkta loggar</h3><p>Analysera behovet och lägg upp loggar med hänsyn till tillgängligt utrymme, provtagningsintervall och anläggningens funktion.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-01.png" alt=""></div><h3>Direkt mot BAS2 och BAS3</h3><p>Arbetar direkt mot BAS2- och BAS3-DUC:er via TCP, USB eller HTTP — med samma agentiska arbetssätt oavsett anslutning.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-02.png" alt=""></div><h3>Programmera från funktion</h3><p>Översätter en funktionsbeskrivning till I/O, objekt och PLC-logik — steg för steg och granskningsbart.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-03.png" alt=""></div><h3>Konfigurera all I/O från en plintlista</h3><p>Läser plintlistan, mappar signalerna och konfigurerar automatiskt anläggningens I/O med rätt kanaler, signalnamn, typer och skalning.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-04.png" alt=""></div><h3>Förstå befintliga anläggningar</h3><p>Hämtar information ur DUC:en och producerar en funktionsbeskrivning av det som redan finns.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-05.png" alt=""></div><h3>Justera med precision</h3><p>Identifierar rätt objekt och parametrar, förklarar konsekvensen och genomför godkända ändringar med precision.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-06.png" alt=""></div><h3>Analysera problem</h3><p>Analyserar anläggningsvärden och loggar, hittar mönster och presenterar välgrundade orsaker och åtgärder.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-07.png" alt=""></div><h3>Arbeta med bilder</h3><p>Ritar processbilder från grunden eller efter exempel, granskar befintliga bilder och hittar fel och förbättringsmöjligheter.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-08.png" alt=""></div><h3>Konfigurera Modbus</h3><p>Tolkar underlag och bygger Modbus-konfigurationer mot aggregat, med noggrann kontroll av register och skalning.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-09.png" alt=""></div><h3>Jämför och kopiera mellan anläggningar</h3><p>Jämför funktionalitet mellan anläggningar och kopierar aggregat med funktion, objekt och bild som utgångspunkt.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-10.png" alt=""></div><h3>Följ upp åtgärder</h3><p>Går igenom loggar, tar fram åtgärder och dokumenterar vad som ska kontrolleras efteråt.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-11.png" alt=""></div><h3>Prata som du vill</h3><p>Beskriv problemet på svenska, engelska eller ett annat språk. Det viktiga är att dialogen blir begriplig för dig.</p></article>
+          <article class="capability"><div class="icon"><img class="capability-icon" src="assets/icons/capability-12.png" alt=""></div><h3>Planera genomtänkta loggar</h3><p>Analysera behovet och lägg upp loggar med hänsyn till tillgängligt utrymme, provtagningsintervall och anläggningens funktion.</p></article>
         </div>
       </div>
     </section>
