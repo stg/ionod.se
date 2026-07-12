@@ -4,6 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="BASxCLI är en stängd alpha för agentisk AI-integration mot BASTEC-system.">
+  <meta property="og:locale" content="sv_SE">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DS prototyp">
+  <meta property="og:title" content="BASxCLI — Ge din DUC en ny kollega">
+  <meta property="og:description" content="Agentisk AI-integration mot BASTEC-system.">
+  <meta property="og:url" content="https://ionod.se/basxcli/">
+  <meta property="og:image" content="https://ionod.se/basxcli/assets/social-preview.png">
+  <meta property="og:image:secure_url" content="https://ionod.se/basxcli/assets/social-preview.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="BASxCLI och en AI-dialog om analys av ett ventilationsaggregat">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BASxCLI — Ge din DUC en ny kollega">
+  <meta name="twitter:description" content="Agentisk AI-integration mot BASTEC-system.">
+  <meta name="twitter:image" content="https://ionod.se/basxcli/assets/social-preview.png">
+  <meta name="twitter:image:alt" content="BASxCLI och en AI-dialog om analys av ett ventilationsaggregat">
+  <link rel="image_src" href="https://ionod.se/basxcli/assets/social-preview.png">
   <title>BASxCLI — AI-integration mot BASTEC-system</title>
   <style>
     :root {
@@ -105,6 +123,7 @@
     .roadmap-card .status { display: inline-flex; margin-bottom: .55rem; padding: .27rem .48rem; border-radius: 999px; background: #f2d7c6; color: #71452f; font-size: .65rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
     .roadmap-card h3 { margin-bottom: .35rem; font-size: 1.03rem; }
     .roadmap-card p { margin: 0; color: #704c39; font-size: .86rem; }
+    .roadmap-card .roadmap-subheading { margin-top: .9rem; padding-top: .8rem; border-top: 1px solid #ecd9cb; }
     .visual-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; }
     .visual-card { margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 15px; background: var(--white); }
     .visual-card > a { display: block; overflow: hidden; background: #e8ece9; }
@@ -306,8 +325,10 @@
           </div>
           <aside class="roadmap-card">
             <span class="status">På väg</span>
-            <h3>Bättre stöd för symboler och layout</h3>
-            <p>Kommande stöd använder BASTEC:s symbolarkiv och integrerad förståelse för BASTEC:s layoutprinciper. Målet är mer konsekventa moderna och klassiska flödes- och manöverbilder även när underlaget är tunt.</p>
+            <h3>Symboler och layout</h3>
+            <p>Kommande stöd använder BASTEC:s symbolarkiv och integrerad förståelse för BASTEC:s layoutprinciper.</p>
+            <h3 class="roadmap-subheading">Versionsförståelse</h3>
+            <p>Möjligheter och begränsningar detekteras automatiskt utifrån programvaruversionen i den anslutna DUC:en.</p>
           </aside>
         </div>
 
