@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="BASx är en stängd alpha för agentisk AI-integration mot BASTEC-system.">
+  <meta property="og:locale" content="sv_SE">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="DS prototyp">
+  <meta property="og:title" content="BASx — Ge din DUC en ny kollega">
+  <meta property="og:description" content="Agentisk AI-integration mot BASTEC-system.">
+  <meta property="og:url" content="https://ionod.se/basx/">
+  <meta property="og:image" content="https://ionod.se/basx/assets/social-preview.png">
+  <meta property="og:image:secure_url" content="https://ionod.se/basx/assets/social-preview.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="BASx och en AI-dialog om analys av ett ventilationsaggregat">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BASx — Ge din DUC en ny kollega">
+  <meta name="twitter:description" content="Agentisk AI-integration mot BASTEC-system.">
+  <meta name="twitter:image" content="https://ionod.se/basx/assets/social-preview.png">
+  <meta name="twitter:image:alt" content="BASx och en AI-dialog om analys av ett ventilationsaggregat">
+  <link rel="image_src" href="https://ionod.se/basx/assets/social-preview.png">
+  <title>BASx — AI-integration mot BASTEC-system</title>
+  <style>
+    :root {
+      --ink: #132b35;
+      --ink-soft: #49616a;
+      --paper: #f7f5ef;
+      --white: #fffefb;
+      --mint: #d9f2df;
+      --lime: #c8f35b;
+      --orange: #ff955a;
+      --line: #d9dfd8;
+      --dark: #122c35;
+      --radius: 22px;
+      --shadow: 0 22px 60px rgba(16, 45, 53, .13);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    a { color: inherit; }
+    .wrap { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: .55rem; margin: 0 0 1rem;
+      color: #39735a; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: .62rem; height: .62rem; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 4px rgba(200,243,91,.22); }
+
+    header { padding: 24px 0; position: relative; z-index: 2; }
+    .nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .brand { display: inline-flex; align-items: center; gap: .75rem; text-decoration: none; font-weight: 850; letter-spacing: -.04em; font-size: 1.25rem; }
+    .brand-mark { width: 35px; height: 35px; border-radius: 11px; display: grid; place-items: center; background: var(--dark); color: var(--lime); font-weight: 900; letter-spacing: -.12em; }
+    nav { display: flex; align-items: center; gap: 1.5rem; color: var(--ink-soft); font-size: .93rem; }
+    nav a { text-decoration: none; }
+    nav a:hover { color: var(--ink); }
+    .nav-cta, .button { display: inline-flex; justify-content: center; align-items: center; gap: .55rem; border: 0; cursor: pointer; text-decoration: none; font-weight: 780; }
+    .nav-cta { color: var(--ink); background: var(--lime); padding: .7rem 1rem; border-radius: 999px; }
+
+    .hero { position: relative; overflow: hidden; padding: 54px 0 94px; }
+    .hero::before { content: ""; position: absolute; width: 620px; height: 620px; right: -210px; top: -240px; border-radius: 50%; background: var(--mint); opacity: .75; }
+    .hero-grid { position: relative; display: grid; grid-template-columns: 1.04fr .96fr; align-items: center; gap: 4.5rem; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 760px; margin-bottom: 1.45rem; font-size: clamp(2.85rem, 6vw, 5.4rem); letter-spacing: -.075em; line-height: .97; }
+    h1 em { color: #37765a; font-style: normal; }
+    .lead { max-width: 630px; color: var(--ink-soft); font-size: 1.16rem; line-height: 1.65; }
+    .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
+    .button { min-height: 48px; padding: .85rem 1.2rem; border-radius: 999px; }
+    .button-primary { background: var(--dark); color: white; box-shadow: 0 10px 22px rgba(18,44,53,.2); }
+    .button-secondary { color: var(--ink); border: 1px solid var(--line); background: rgba(255,255,255,.55); }
+    .alpha-note { display: flex; gap: .8rem; align-items: flex-start; max-width: 590px; margin-top: 1.7rem; padding: 1rem 1.05rem; background: #fff1e8; border-left: 3px solid var(--orange); border-radius: 0 13px 13px 0; color: #75452e; font-size: .91rem; }
+    .alpha-note strong { color: #59311f; }
+
+    .console { position: relative; width: 100%; border-radius: 22px; padding: 13px; background: #0f2831; box-shadow: var(--shadow); transform: rotate(2.5deg); }
+    .console-top { display: flex; align-items: center; gap: 6px; height: 22px; padding: 0 5px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #ff925b; }
+    .dot:nth-child(2) { background: #f5d55f; }.dot:nth-child(3) { background: #8ad394; }
+    .console-name { margin-left: auto; color: #a9bec2; font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; }
+    .console-body { padding: 19px; min-height: 396px; border-radius: 14px; background: linear-gradient(130deg, #173b46, #112b34); color: #e8f2ec; }
+    .console-label { margin-bottom: 1rem; color: #9db7ae; font-size: .68rem; font-weight: 750; letter-spacing: .11em; text-transform: uppercase; }
+    .message { max-width: 89%; margin-bottom: 14px; padding: 12px 14px; border-radius: 13px; font-size: .82rem; line-height: 1.45; }
+    .message.user { margin-left: auto; border-bottom-right-radius: 3px; background: #dff4e2; color: #1a3c33; }
+    .message.ai { border-bottom-left-radius: 3px; background: rgba(255,255,255,.09); }
+    .message strong { display: block; margin-bottom: 4px; color: #bfe881; font-size: .67rem; letter-spacing: .07em; text-transform: uppercase; }
+    .work { display: flex; align-items: center; gap: .6rem; margin-top: 1.1rem; color: #c9dcd3; font-size: .73rem; }
+    .pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 0 rgba(200,243,91,.7); animation: blink 1.8s infinite; }
+    @keyframes blink { 65% { box-shadow: 0 0 0 8px rgba(200,243,91,0); } 100% { box-shadow: 0 0 0 0 rgba(200,243,91,0); } }
+
+    .trust { padding: 0 0 80px; }
+    .trust-strip { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2rem; padding: 1.1rem 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .trust-strip p { margin: 0; font-weight: 720; }
+    .trust-points { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; color: var(--ink-soft); font-size: .88rem; }
+    .trust-points span::before { content: "✓"; margin-right: .45rem; color: #39805e; font-weight: 900; }
+
+    section { padding: 88px 0; }
+    .section-heading { max-width: 690px; margin-bottom: 3rem; }
+    h2 { margin-bottom: .8rem; font-size: clamp(2rem, 4vw, 3.35rem); letter-spacing: -.055em; line-height: 1.05; }
+    .section-heading p { margin: 0; color: var(--ink-soft); font-size: 1.05rem; }
+    .capability-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .capability { min-height: 230px; padding: 1.45rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); transition: transform .2s ease, box-shadow .2s ease; }
+    .capability:hover { transform: translateY(-5px); box-shadow: 0 18px 32px rgba(24,56,61,.09); }
+    .icon { width: 43px; height: 43px; display: grid; place-items: center; margin-bottom: 2.2rem; border-radius: 13px; background: var(--mint); color: #2c6950; font-size: 1.3rem; }
+    .capability:nth-child(2) .icon, .capability:nth-child(6) .icon { background: #fff0e6; color: #b35c2c; }
+    .capability:nth-child(3) .icon, .capability:nth-child(7) .icon { background: #edf0ff; color: #5669a5; }
+    h3 { margin-bottom: .55rem; font-size: 1.1rem; letter-spacing: -.025em; }
+    .capability p { margin: 0; color: var(--ink-soft); font-size: .91rem; }
+
+    .pictures { padding: 56px 0 70px; background: var(--paper); }
+    .picture-intro { display: grid; grid-template-columns: .9fr 1.1fr; gap: 1.5rem; align-items: start; margin-bottom: 1.4rem; }
+    .picture-intro .section-heading { margin-bottom: 0; }
+    .picture-intro .section-heading h2 { font-size: clamp(1.65rem, 3vw, 2.35rem); }
+    .picture-intro .section-heading p { font-size: .96rem; }
+    .roadmap-card { padding: 1.05rem 1.15rem; border-radius: 15px; background: #fff8f2; border: 1px solid #ecd9cb; }
+    .roadmap-card .status { display: inline-flex; margin-bottom: .55rem; padding: .27rem .48rem; border-radius: 999px; background: #f2d7c6; color: #71452f; font-size: .65rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+    .roadmap-card h3 { margin-bottom: .35rem; font-size: 1.03rem; }
+    .roadmap-card p { margin: 0; color: #704c39; font-size: .86rem; }
+    .roadmap-card .roadmap-subheading { margin-top: .9rem; padding-top: .8rem; border-top: 1px solid #ecd9cb; }
+    .visual-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; }
+    .visual-card { margin: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 15px; background: var(--white); }
+    .visual-card > a { display: block; overflow: hidden; background: #e8ece9; }
+    .visual-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform .35s ease; }
+    .visual-card img.contain { object-fit: contain; background: #edf0eb; }
+    .visual-card a:hover img { transform: scale(1.015); }
+    .visual-card figcaption { padding: .75rem .8rem .9rem; }
+    .visual-card figcaption strong { display: block; margin-bottom: .2rem; font-size: .9rem; }
+    .visual-card figcaption span { color: var(--ink-soft); font-size: .76rem; line-height: 1.4; }
+    .visual-placeholder { aspect-ratio: 4 / 3; display: grid; place-items: center; padding: 1rem; background: #edf0eb; text-align: center; color: #71817b; }
+    .visual-placeholder span { display: block; margin-bottom: .35rem; font-size: 1.35rem; }
+    .visual-placeholder strong { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
+
+    .workflow { background: var(--dark); color: #eff8f1; overflow: hidden; }
+    .workflow .eyebrow { color: #aee3c1; }.workflow h2 { color: white; }.workflow .section-heading p { color: #b6c9c5; }
+    .workflow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+    .flow-card { position: relative; min-height: 254px; padding: 1.55rem; overflow: hidden; border: 1px solid rgba(255,255,255,.13); border-radius: var(--radius); background: rgba(255,255,255,.055); }
+    .flow-number { color: var(--lime); font-size: .75rem; font-weight: 850; letter-spacing: .12em; }
+    .flow-card h3 { margin-top: 3rem; color: white; font-size: 1.4rem; }.flow-card p { max-width: 430px; color: #c0d0cd; }
+    .flow-card::after { content: ""; position: absolute; right: -38px; bottom: -52px; width: 160px; height: 160px; border: 27px solid rgba(200,243,91,.16); border-radius: 50%; }
+    .flow-card:nth-child(2)::after { border-color: rgba(255,149,90,.2); }
+
+    .honesty { background: #e8f2ea; }
+    .honesty-grid { display: grid; grid-template-columns: .87fr 1.13fr; gap: 4.5rem; align-items: start; }
+    .sticky-label { position: sticky; top: 1.5rem; }
+    .quote { margin: 1.2rem 0 0; color: #2c654c; font-size: clamp(1.65rem, 3vw, 2.45rem); font-weight: 720; letter-spacing: -.045em; line-height: 1.12; }
+    .limits { display: grid; gap: .8rem; }
+    .limit { padding: 1.1rem 1.15rem; border-radius: 15px; background: rgba(255,255,255,.66); }
+    .limit h3 { margin-bottom: .3rem; }.limit p { margin: 0; color: var(--ink-soft); font-size: .92rem; }
+
+    .start { background: var(--white); }
+    .start-grid { display: grid; grid-template-columns: 1.06fr .94fr; gap: 3.3rem; align-items: center; }
+    .steps { display: grid; gap: .8rem; }
+    .step { display: grid; grid-template-columns: 36px 1fr; gap: .9rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+    .step-no { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: var(--dark); color: var(--lime); font-size: .75rem; font-weight: 800; }
+    .step h3 { margin: 0 0 .18rem; }.step p { margin: 0; color: var(--ink-soft); font-size: .92rem; }
+    .agent-card { padding: 1.65rem; border-radius: var(--radius); background: #fff3e8; }
+    .agent-card h3 { margin-top: .3rem; font-size: 1.45rem; }.agent-card p { color: #704c39; }
+    .agent-card ul { margin: 1.1rem 0 0; padding: 0; list-style: none; color: #704c39; font-size: .9rem; }
+    .agent-card li { padding: .5rem 0; border-top: 1px solid rgba(144,94,61,.18); }.agent-card li::before { content: "→"; display: inline-block; margin-right: .55rem; color: #c45d2a; font-weight: 800; }
+    .agent-card strong { color: #5d321f; }
+    .agent-card a { color: #5d321f; font-weight: 780; text-underline-offset: 3px; }
+
+    .tips-section { background: var(--paper); }
+    .tips-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .tip-card { position: relative; min-height: 220px; padding: 1.5rem; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); }
+    .tip-card::after { content: ""; position: absolute; right: -45px; bottom: -55px; width: 135px; height: 135px; border: 22px solid var(--mint); border-radius: 50%; opacity: .72; }
+    .tip-card:nth-child(2)::after { border-color: #fff0e6; }
+    .tip-card:nth-child(3)::after { border-color: #edf0ff; }
+    .tip-card:nth-child(4)::after { border-color: rgba(200,243,91,.5); }
+    .tip-card.clients { grid-column: 1 / -1; min-height: 0; }
+    .tip-label { display: inline-grid; place-items: center; width: 31px; height: 31px; margin-bottom: 1.7rem; border-radius: 9px; background: var(--dark); color: var(--lime); font-size: .74rem; font-weight: 850; }
+    .tip-card h3 { position: relative; z-index: 1; margin-bottom: .5rem; font-size: 1.2rem; }
+    .tip-card p { position: relative; z-index: 1; max-width: 490px; margin: 0; color: var(--ink-soft); font-size: .92rem; }
+    .tip-card p a { color: #2c6950; font-weight: 780; text-underline-offset: 3px; }
+    .client-options { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.25rem; }
+    .client-option { padding: 1.15rem; border: 1px solid var(--line); border-radius: 15px; background: var(--paper); }
+    .client-option h4 { margin: 0 0 .45rem; font-size: 1rem; }
+    .client-option p { max-width: none; }
+    .client-option a { color: #2c6950; font-weight: 780; text-underline-offset: 3px; }
+
+    .contact { padding: 88px 0 0; background: var(--dark); color: white; }
+    .contact-box { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 2rem; padding: 2.8rem; border-radius: 26px 26px 0 0; background: #1c3c46; }
+    .contact .eyebrow { color: #b8e5c5; }.contact h2 { max-width: 760px; margin-bottom: .8rem; }.contact p { max-width: 600px; margin: 0; color: #c3d3cf; }
+    .contact-links { display: flex; flex-direction: column; gap: .55rem; align-items: flex-start; }
+    .contact-links a { padding: .8rem 1rem; border-radius: 10px; background: var(--lime); color: var(--dark); font-weight: 800; text-decoration: none; white-space: nowrap; }
+    footer { padding: 1.5rem 0 2rem; background: var(--dark); color: #9eb3ae; font-size: .8rem; }
+    .footer-row { display: flex; justify-content: space-between; gap: 1rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.13); }
+
+    @media (max-width: 820px) {
+      nav a:not(.nav-cta) { display: none; }
+      .hero { padding-top: 28px; }.hero-grid, .honesty-grid, .start-grid, .picture-intro { grid-template-columns: 1fr; gap: 2.5rem; }
+      .console { max-width: 560px; margin: 1rem auto 0; transform: rotate(0); }
+      .capability-grid, .visual-grid { grid-template-columns: repeat(2, 1fr); }.workflow-grid { grid-template-columns: 1fr; }.tips-grid, .client-options { grid-template-columns: 1fr; }
+      .tip-card.clients { grid-column: auto; }
+      .trust-strip { grid-template-columns: 1fr; gap: .6rem; }.trust-points { justify-content: flex-start; }
+      .contact-box { grid-template-columns: 1fr; align-items: start; }
+    }
+    @media (max-width: 520px) {
+      .wrap { width: min(100% - 28px, 1160px); }.nav-cta { font-size: .82rem; }.brand { font-size: 1.1rem; }
+      h1 { font-size: 2.8rem; }.capability-grid, .visual-grid { grid-template-columns: 1fr; }.capability { min-height: 0; }.icon { margin-bottom: 1.3rem; }
+      section { padding: 62px 0; }.contact { padding-top: 62px; }.contact-box { padding: 1.7rem; }.footer-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="BASx, till startsidan"><span class="brand-mark">B×</span>BASx</a>
+      <nav aria-label="Huvudmeny">
+        <a href="#mojligheter">Möjligheter</a>
+        <a href="#alpha">Om alpha</a>
+        <a href="#bilder">Bilder</a>
+        <a href="#komigang">Kom igång</a>
+        <a href="#tips">Tips</a>
+        <a class="nav-cta" href="#kontakt">Begär tillgång</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">Stängd alpha · DS prototyp</p>
+          <h1>Ge din DUC en <em>ny kollega.</em></h1>
+          <p class="lead">BASx arbetar direkt mot BASTEC-system på ingenjörsnivå. Beskriv vad du vill åstadkomma med egna ord, så undersöker BASx anläggningen, resonerar kring uppgiften och genomför arbetet tillsammans med dig.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#kontakt">Kontakta DS prototyp <span aria-hidden="true">→</span></a>
+            <a class="button button-secondary" href="#mojligheter">Se vad BASx gör</a>
+          </div>
+          <aside class="alpha-note"><span aria-hidden="true">✦</span><span><strong>Viktigt:</strong> Detta är en stängd alpha. BASx är fortfarande ungt — förvänta dig inte underverk. Arbetet ska granskas av en kunnig person innan det används i drift.</span></aside>
+        </div>
+
+        <div class="console" aria-label="Illustration av en dialog med BASx">
+          <div class="console-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="console-name">BASx · agentläge</span></div>
+          <div class="console-body">
+            <p class="console-label">Pågående uppgift</p>
+            <div class="message user">Kan du gå igenom aggregat 3? Jag tror att återvinningen går för dåligt när det är kallt ute.</div>
+            <div class="message ai"><strong>BASx</strong>Jag läser in relevanta objekt, börvärden och historiska loggar. Jag ser en avvikelse i temperaturverkningsgrad och föreslår att vi först granskar givaren T24 och frysskyddssekvensen.</div>
+            <div class="message user">Visa vad du hittar och föreslå säkra nästa steg.</div>
+            <div class="message ai"><strong>BASx</strong>Jag sammanställer en åtgärdslista och lämnar ändringsförslag för godkännande — inga ändringar görs utan din bekräftelse.</div>
+            <div class="work"><span class="pulse"></span>Undersöker anläggningsdata…</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="trust">
+      <div class="wrap trust-strip">
+        <p>Byggt för kvalificerat ingenjörsarbete i verkliga system.</p>
+        <div class="trust-points"><span>På ditt språk</span><span>Med människa i loopen</span><span>För BASTEC-miljöer</span></div>
+      </div>
+    </div>
+
+    <section id="mojligheter">
+      <div class="wrap">
+        <div class="section-heading">
+          <p class="eyebrow">Redan tillgängligt</p>
+          <h2>Vad BASx gör redan idag.</h2>
+          <p>BASx arbetar direkt med DUC:en. Funktionerna nedan är på plats, används i praktiskt ingenjörsarbete och skapar värde även i avancerade uppgifter.</p>
+        </div>
+        <div class="capability-grid">
+          <article class="capability"><div class="icon" aria-hidden="true">↯</div><h3>Direkt mot BAS2 och BAS3</h3><p>Arbetar direkt mot BAS2- och BAS3-DUC:er via TCP, USB eller HTTP — med samma agentiska arbetssätt oavsett anslutning.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">⌘</div><h3>Programmera från funktion</h3><p>Översätter en funktionsbeskrivning till I/O, objekt och PLC-logik — steg för steg och granskningsbart.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">⇥</div><h3>Konfigurera all I/O från en plintlista</h3><p>Läser plintlistan, mappar signalerna och konfigurerar automatiskt anläggningens I/O med rätt kanaler, signalnamn, typer och skalning.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">↗</div><h3>Förstå befintliga anläggningar</h3><p>Hämtar information ur DUC:en och producerar en funktionsbeskrivning av det som redan finns.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">◎</div><h3>Justera med precision</h3><p>Identifierar rätt objekt och parametrar, förklarar konsekvensen och genomför godkända ändringar med precision.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">▤</div><h3>Analysera problem</h3><p>Analyserar anläggningsvärden och loggar, hittar mönster och presenterar välgrundade orsaker och åtgärder.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">◫</div><h3>Arbeta med bilder</h3><p>Ritar processbilder från grunden eller efter exempel, granskar befintliga bilder och hittar fel och förbättringsmöjligheter.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">↔</div><h3>Konfigurera Modbus</h3><p>Tolkar underlag och bygger Modbus-konfigurationer mot aggregat, med noggrann kontroll av register och skalning.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">⊞</div><h3>Jämför och kopiera mellan anläggningar</h3><p>Jämför funktionalitet mellan anläggningar och kopierar aggregat med funktion, objekt och bild som utgångspunkt.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">⌁</div><h3>Följ upp åtgärder</h3><p>Går igenom loggar, tar fram åtgärder och dokumenterar vad som ska kontrolleras efteråt.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">◌</div><h3>Prata som du vill</h3><p>Beskriv problemet på svenska, engelska eller ett annat språk. Det viktiga är att dialogen blir begriplig för dig.</p></article>
+          <article class="capability"><div class="icon" aria-hidden="true">≋</div><h3>Planera genomtänkta loggar</h3><p>Analysera behovet och lägg upp loggar med hänsyn till tillgängligt utrymme, provtagningsintervall och anläggningens funktion.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="workflow">
+      <div class="wrap">
+        <div class="section-heading">
+          <p class="eyebrow">Så fungerar arbetet</p>
+          <h2>Du beskriver. BASx utför. Du avgör.</h2>
+          <p>BASx undersöker, resonerar, programmerar och dokumenterar tillsammans med dig. Du behåller överblicken och avgör vad som ska genomföras.</p>
+        </div>
+        <div class="workflow-grid">
+          <article class="flow-card"><span class="flow-number">01 · FRÅGA</span><h3>Beskriv uppgiften naturligt</h3><p>”Kopiera funktion och bild från detta aggregat.” ”Varför larmar värmeväxlaren?” ”Hjälp mig lägga till en Modbus-mätare.”</p></article>
+          <article class="flow-card"><span class="flow-number">02 · UNDERSÖK</span><h3>BASx använder rätt verktyg</h3><p>BASx hämtar struktur, värden, filer och annan relevant information och bygger en tydlig bild av läget.</p></article>
+          <article class="flow-card"><span class="flow-number">03 · RESONERA</span><h3>Svar och åtgärder i klartext</h3><p>Du får begripliga förklaringar, genomarbetade resultat och konkreta nästa steg. Be om en andra analys eller gå djupare i detaljerna.</p></article>
+          <article class="flow-card"><span class="flow-number">04 · GRANSKA</span><h3>Människan har sista ordet</h3><p>Resultatet är transparent och granskningsbart. Du kontrollerar det före ändringar och avgör vad som ska genomföras i anläggningen.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="honesty" id="alpha">
+      <div class="wrap honesty-grid">
+        <div class="sticky-label">
+          <p class="eyebrow">Ärlig status</p>
+          <h2>Kraftfullt redan idag. Fortfarande alpha.</h2>
+          <p class="quote">”Denna AI är än mycket ung — förvänta dig inte underverk.”</p>
+        </div>
+        <div class="limits">
+          <article class="limit"><h3>Stängd alpha</h3><p>Kärnfunktionerna är på plats och används redan, samtidigt som gränssnitt och arbetsflöden fortsätter att utvecklas. Åtkomst ges till ett begränsat antal personer som vill arbeta praktiskt och bidra med återkoppling.</p></article>
+          <article class="limit"><h3>Byggt för yrkeskunniga</h3><p>BASx förstärker din förmåga att analysera, bygga och dokumentera på hög nivå. Din erfarenhet ger sammanhanget och säkerställer att resultatet passar den verkliga anläggningen.</p></article>
+          <article class="limit"><h3>Verifiera före drift</h3><p>Alla ändringar, PLC-förslag, registermappningar och bilder måste kontrolleras och testas av behörig, kunnig personal innan de används i en aktiv anläggning.</p></article>
+          <article class="limit"><h3>Bättre genom verklig användning</h3><p>Praktiska alpha-tester visar både styrkor och gränser. Återkoppling på resultat, arbetsflöden och säkerhet driver utvecklingen framåt.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="pictures" id="bilder">
+      <div class="wrap">
+        <div class="picture-intro">
+          <div class="section-heading">
+            <p class="eyebrow">Verkliga arbetsresultat</p>
+            <h2>Självständigt arbete, direkt ur anläggningen.</h2>
+            <p>Alla bilder nedan visar verkligt arbete som BASx har utfört självständigt — inte mockuper. PLC-programmet och funktionsbeskrivningen är konkreta leveranser från samma anläggningsarbete.</p>
+          </div>
+          <aside class="roadmap-card">
+            <span class="status">På väg</span>
+            <h3>Symboler och layout</h3>
+            <p>Kommande stöd använder BASTEC:s symbolarkiv och integrerad förståelse för BASTEC:s layoutprinciper.</p>
+            <h3 class="roadmap-subheading">Versionsförståelse</h3>
+            <p>Möjligheter och begränsningar detekteras automatiskt utifrån programvaruversionen i den anslutna DUC:en.</p>
+          </aside>
+        </div>
+
+        <div class="visual-grid">
+          <figure class="visual-card">
+            <a href="assets/plc.png" target="_blank" rel="noopener"><img class="contain" src="assets/plc.png" loading="lazy" alt="PLC-program som BASx självständigt har arbetat fram"></a>
+            <figcaption><strong>Verkligt PLC-arbete</strong><span>PLC-funktion som BASx självständigt har byggt och dokumenterat.</span></figcaption>
+          </figure>
+          <figure class="visual-card">
+            <a href="assets/funktionsbeskrivning.png" target="_blank" rel="noopener"><img class="contain" src="assets/funktionsbeskrivning.png" loading="lazy" alt="Funktionsbeskrivning som BASx självständigt har tagit fram"></a>
+            <figcaption><strong>Verklig funktionsbeskrivning</strong><span>Funktionsbeskrivning som BASx självständigt har tagit fram från den befintliga anläggningen.</span></figcaption>
+          </figure>
+          <figure class="visual-card">
+            <a href="assets/modern.png" target="_blank" rel="noopener"><img src="assets/modern.png" loading="lazy" alt="Modern funktionsbild för ventilationssystemet 5701 FTX"></a>
+            <figcaption><strong>Från tom yta · modern</strong><span>Skapad helt från grunden av BASx. Ännu inte perfekt, men redan en tydlig och användbar modern processbild.</span></figcaption>
+          </figure>
+          <figure class="visual-card">
+            <a href="assets/classic.png" target="_blank" rel="noopener"><img src="assets/classic.png" loading="lazy" alt="Klassisk BASTEC-inspirerad manöverbild för ventilationssystemet 5701 FTX"></a>
+            <figcaption><strong>Från tom yta · klassisk</strong><span>Skapad helt från grunden av BASx. Ännu inte perfekt, men redan ett användbart resultat i klassisk BASTEC-layout.</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="start" id="komigang">
+      <div class="wrap start-grid">
+        <div>
+          <p class="eyebrow">Kom igång</p>
+          <h2>Välj en kraftfull arbetsmiljö för BASx.</h2>
+          <p class="lead">BASx arbetar i en agentisk AI-miljö som kan köra färdigheter (<em>skills</em>) och lokala verktyg. Där får BASx utrymme att planera, utföra hela arbetsflöden och återrapportera resultatet på ditt språk.</p>
+          <div class="steps">
+            <article class="step"><span class="step-no">1</span><div><h3>Välj arbetsmiljö</h3><p>BASx behöver en miljö som kan använda lokala verktyg och skills, inte bara föra en vanlig chatt.</p></div></article>
+            <article class="step"><span class="step-no">2</span><div><h3>Installera BASx</h3><p>Låt den valda AI-miljön guida dig genom förutsättningarna och installationen.</p></div></article>
+            <article class="step"><span class="step-no">3</span><div><h3>Ge BASx en riktig uppgift</h3><p>Låt BASx läsa, analysera, dokumentera eller genomföra ett komplett arbetsmoment i anläggningen.</p></div></article>
+          </div>
+        </div>
+        <aside class="agent-card">
+          <p class="eyebrow">En rak rekommendation</p>
+          <h3>Välj en motor som matchar arbetet.</h3>
+          <p>Gratis AI-miljöer räcker för grunderna, men är ärligt talat ofta inte starka nog för kvalificerat arbete i flera steg. För att få ut BASx fulla kapacitet rekommenderar vi:</p>
+          <ul>
+            <li><a href="https://chatgpt.com/pricing/" target="_blank" rel="noopener noreferrer"><strong>ChatGPT Plus</strong></a> med <a href="https://developers.openai.com/codex/ide/" target="_blank" rel="noopener noreferrer">Codex</a> och GPT‑5.5 eller GPT‑5.6 Terra när modellerna finns tillgängliga i din miljö.</li>
+            <li><a href="https://claude.ai/upgrade" target="_blank" rel="noopener noreferrer"><strong>Claude Pro</strong></a>, instegsnivån bland betalda individuella abonnemang, med Claude Code och Claude Sonnet&nbsp;5 eller Claude Opus&nbsp;4.8 för mer krävande kod- och verktygsarbete.</li>
+          </ul>
+          <p style="margin-top:1rem;font-size:.82rem">Modeller och paket förändras snabbt. Välj alltid den aktuella modell som uttryckligen har stöd för agentiskt arbete och lokala verktyg.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="tips-section" id="tips">
+      <div class="wrap">
+        <div class="section-heading">
+          <p class="eyebrow">Tips på vägen</p>
+          <h2>Kom snabbt igång med BASx.</h2>
+          <p>Installationen görs en gång. Därefter är BASx redo för återkommande och avancerat anläggningsarbete.</p>
+        </div>
+        <div class="tips-grid">
+          <article class="tip-card clients">
+            <span class="tip-label">01</span>
+            <h3>Välj var BASx ska arbeta</h3>
+            <p>Välj en enkel skrivbordsapp för dialog med BASx eller arbeta projektbaserat i VS Code med full överblick över filer, instruktioner och resultat.</p>
+            <div class="client-options">
+              <div class="client-option">
+                <h4>ChatGPT och Codex</h4>
+                <p><a href="https://chatgpt.com/download/" target="_blank" rel="noopener noreferrer">Ladda ner ChatGPT</a> — inte ”ChatGPT Classic” — som programmet där du arbetar med BASx. För ett projektbaserat ingenjörsarbete laddar du ner <a href="https://code.visualstudio.com/download" target="_blank" rel="noopener noreferrer">Visual Studio Code</a> och installerar det officiella <a href="https://marketplace.visualstudio.com/items?itemName=openai.chatgpt" target="_blank" rel="noopener noreferrer">Codex-tillägget</a>.</p>
+              </div>
+              <div class="client-option">
+                <h4>Claude</h4>
+                <p><a href="https://claude.com/download" target="_blank" rel="noopener noreferrer">Ladda ner Claude Desktop</a> och använd <a href="https://code.claude.com/docs/en/platforms" target="_blank" rel="noopener noreferrer">Claude Code</a> eller <a href="https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork" target="_blank" rel="noopener noreferrer">Cowork</a> för ett visuellt arbetssätt. För projektarbete laddar du ner <a href="https://code.visualstudio.com/download" target="_blank" rel="noopener noreferrer">Visual Studio Code</a> och installerar det officiella <a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code" target="_blank" rel="noopener noreferrer">Claude Code-tillägget</a>, eller använder Claude Code direkt i terminalen.</p>
+              </div>
+            </div>
+          </article>
+          <article class="tip-card">
+            <span class="tip-label">02</span>
+            <h3>Installera BASx från arkivet</h3>
+            <p>BASx levereras som ett arkiv. Be den valda AI-miljön att installera det. När installationen är klar kan BASx uppdateras till de senaste versionerna allteftersom de släpps genom att du bara ber om det.</p>
+          </article>
+          <article class="tip-card">
+            <span class="tip-label">03</span>
+            <h3>Be om hjälp med rättigheter</h3>
+            <p>Vissa operativsystem kräver manuella rättighetsåtgärder innan verktyget får full funktionalitet. BASx ger dig instruktioner steg för steg. Stöter du på problem är det bara att be om hjälp.</p>
+          </article>
+          <article class="tip-card">
+            <span class="tip-label">04</span>
+            <h3>Ge BASx mer kraft med Python</h3>
+            <p>Be BASx att installera <a href="https://www.python.org/downloads/" target="_blank" rel="noopener noreferrer">Python</a>. Då kan BASx skriva och köra egna skript för beräkningar, databehandling och repetitiva eller mekaniska arbetsmoment — och producera PDF-rapporter med loggdiagram samt färdigformaterad dokumentation.</p>
+          </article>
+          <article class="tip-card">
+            <span class="tip-label">05</span>
+            <h3>En engångsprocess</h3>
+            <p>Det kan ta en stund att få alla delar på plats första gången. Det är en engångsprocess — när den är klar finns verktygen redo för kommande arbeten.</p>
+          </article>
+          <article class="tip-card">
+            <span class="tip-label">06</span>
+            <h3>Fråga långt och detaljerat</h3>
+            <p>Var inte rädd för långa, komplexa och detaljerade förfrågningar. BASx har redan tillgång till ett omfattande dokumentationsarkiv i minnet, och din långa fråga är faktiskt inte särskilt lång alls i jämförelse.</p>
+          </article>
+          <article class="tip-card">
+            <span class="tip-label">07</span>
+            <h3>Olika inbyggda arbetssätt</h3>
+            <p>BASx arbetar medvetet försiktigt, men stödjer olika arbetssätt. Om BASx är för försiktigt, be BASx arbeta aggressivare — mindre förarbete, mindre kontroller och större självförtroende!</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="kontakt">
+      <div class="wrap contact-box">
+        <div>
+          <p class="eyebrow">Stängd alpha</p>
+          <h2>Nyfiken på att prova BASx i din miljö?</h2>
+          <p>Kontakta DS prototyp för att diskutera förutsättningar, testupplägg och tillgång. Mjukvaran är strikt licensbelagd.</p>
+        </div>
+        <div class="contact-links">
+          <a href="tel:+46733420400">0733&nbsp;420&nbsp;400</a>
+          <a href="mailto:senseitg@gmail.com">senseitg@gmail.com</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-row"><span>© DS prototyp · BASx</span><span>Stängd alpha · Strikt licensbelagd mjukvara</span></div>
+  </footer>
+</body>
+</html>
