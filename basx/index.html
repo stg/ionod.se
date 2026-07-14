@@ -59,7 +59,7 @@
     header { padding: 24px 0; position: relative; z-index: 2; }
     .nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
     .brand { display: inline-flex; align-items: center; gap: .75rem; text-decoration: none; font-weight: 850; letter-spacing: -.04em; font-size: 1.25rem; }
-    .brand-mark { width: 35px; height: 35px; border-radius: 11px; display: grid; place-items: center; background: var(--dark); color: var(--lime); font-weight: 900; letter-spacing: -.12em; }
+    .brand-mark { width: 35px; height: 35px; display: block; flex: 0 0 auto; object-fit: contain; }
     nav { display: flex; align-items: center; gap: 1.5rem; color: var(--ink-soft); font-size: .93rem; }
     nav a { text-decoration: none; }
     nav a:hover { color: var(--ink); }
@@ -228,7 +228,7 @@
 <body>
   <header>
     <div class="wrap nav">
-      <a class="brand" href="#top" aria-label="BASx, till startsidan"><span class="brand-mark">B×</span>BASx</a>
+      <a class="brand" href="#top" aria-label="BASx, till startsidan"><img class="brand-mark" src="assets/logo.png" alt="">BASx</a>
       <nav aria-label="Huvudmeny">
         <a href="#mojligheter">Möjligheter</a>
         <a href="#alpha">Om alpha</a>

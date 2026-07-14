@@ -75,14 +75,31 @@
     h1 {
       max-width: 760px;
       margin-bottom: 1.5rem;
-      font-size: clamp(3.1rem, 10vw, 6.9rem);
       letter-spacing: -.078em;
       line-height: .9;
     }
 
-    h1 span {
+    .title-line {
+      display: flex;
+      align-items: baseline;
+      gap: .75rem;
+      color: var(--ink);
+      font-size: clamp(3.1rem, 10vw, 6.9rem);
+    }
+
+    .title-mark {
+      width: .72em;
+      height: .72em;
       display: block;
+      flex: 0 0 auto;
+      object-fit: contain;
+    }
+
+    .alpha-title {
+      display: block;
+      margin-top: .06em;
       color: var(--green);
+      font-size: clamp(2.5rem, 7vw, 4.7rem);
       font-weight: 760;
     }
 
@@ -330,7 +347,8 @@
     @media (max-width: 580px) {
       .page-shell { width: min(100% - 28px, 940px); padding-top: 48px; }
       .invite::before { right: 1%; width: 64px; height: 64px; border-width: 12px; }
-      h1 { font-size: clamp(3rem, 18vw, 5rem); }
+      .title-line { font-size: clamp(3rem, 17vw, 5rem); }
+      .alpha-title { font-size: clamp(2.5rem, 13vw, 3.8rem); }
       .primary-message { font-size: 1.65rem; }
       footer { flex-direction: column; gap: .25rem; }
     }
@@ -348,18 +366,21 @@
 <body>
   <main class="page-shell">
     <section class="invite" aria-labelledby="page-title">
-      <h1 id="page-title">BASx <span>stängd alpha</span></h1>
+      <h1 id="page-title">
+        <span class="title-line"><img class="title-mark" src="../assets/logo.png" alt=""><span>BASx</span></span>
+        <span class="alpha-title">stängd alpha</span>
+      </h1>
       <h2 class="primary-message" id="primary-message" aria-live="polite" aria-busy="true">Kontrollerar nyckel…</h2>
 
       <div class="ready-content" id="ready-content" hidden>
         <p class="access-line">Du har fått tillgång till BASx alpha.</p>
-        <p class="personal-note"><strong>Jag hoppas att ni ska få skoj ihop — du och BASx.</strong> Ge BASx en riktig uppgift, prata som du brukar och låt den undersöka, resonera och arbeta direkt med BASTEC-systemet tillsammans med dig. Det här är en tidig, stängd alpha, så var gärna nyfiken men också noggrann: granska alltid resultat och ändringar innan de används i drift.</p>
+        <p class="personal-note"><strong>Jag hoppas att ni ska trivas ihop — du och BASx.</strong> Ge BASx något verkligt att bita i, prata som du brukar och se vart ni kommer tillsammans. BASx bidrar med verktygen och uthålligheten; du bidrar med erfarenheten och har alltid sista ordet.</p>
 
         <section class="agreement-card" aria-labelledby="agreement-title">
           <div class="agreement-heading">
             <p class="eyebrow">En sak innan ni börjar</p>
             <h3 id="agreement-title">Läs och godkänn villkoren.</h3>
-            <p>BASx arbetar nära riktiga system och kan göra mycket. Därför behöver du känna till ramarna för alpha-testet innan du laddar ner programvaran.</p>
+            <p>Nedan anges de licensvillkor som gäller för din tillgång till och användning av programvaran BASx.</p>
           </div>
 
           <pre class="eula" id="eula-text" tabindex="0"></pre>
