@@ -334,6 +334,15 @@
       text-align: center;
     }
 
+    .receipt-link {
+      display: block;
+      margin: .7rem auto 0;
+      color: var(--green);
+      font-size: .82rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
     footer {
       display: flex;
       justify-content: space-between;
@@ -398,6 +407,7 @@
               <span aria-hidden="true">↓</span>
             </button>
             <p class="download-note" id="download-note">Din nyckel och ditt godkännande verifieras när hämtningen startar.</p>
+            <a class="receipt-link" id="receipt-link" href="#" hidden>Spara kvitto på godkännandet</a>
           </div>
         </section>
 
@@ -426,6 +436,7 @@
       const acceptanceLabel = document.getElementById('acceptance-label');
       const downloadButton = document.getElementById('download-button');
       const downloadNote = document.getElementById('download-note');
+      const receiptLink = document.getElementById('receipt-link');
 
       class PageError extends Error {}
 
@@ -478,14 +489,16 @@
         const eulaVersion = typeof payload['eula_version'] === 'string' ? payload['eula_version'].trim() : '';
         const eulaSha256 = typeof payload['eula_sha256'] === 'string' ? payload['eula_sha256'].trim() : '';
         const statementVersion = Number(payload['statement_version']);
+        const acceptanceStatement = typeof payload['acceptance_statement'] === 'string' ? payload['acceptance_statement'] : '';
+        const acceptanceStatementSha256 = typeof payload['acceptance_statement_sha256'] === 'string' ? payload['acceptance_statement_sha256'].trim() : '';
         const licensor = typeof payload['licensor'] === 'string' ? payload['licensor'].trim() : '';
         const licensorContact = typeof payload['licensor_contact'] === 'string' ? payload['licensor_contact'].trim() : '';
 
-        if (eula.trim() === '' || releaseVersion === '' || artifactSha256 === '' || eulaVersion === '' || eulaSha256 === '' || !Number.isInteger(statementVersion)) {
+        if (eula.trim() === '' || releaseVersion === '' || artifactSha256 === '' || eulaVersion === '' || eulaSha256 === '' || !Number.isInteger(statementVersion) || acceptanceStatement.trim() === '' || !/^[0-9a-f]{64}$/i.test(acceptanceStatementSha256)) {
           throw new PageError('Villkoren är inte tillgängliga just nu. Försök igen lite senare.');
         }
 
-        return {eula, releaseVersion, artifactSha256, eulaVersion, eulaSha256, statementVersion, licensor, licensorContact};
+        return {eula, releaseVersion, artifactSha256, eulaVersion, eulaSha256, statementVersion, acceptanceStatement, acceptanceStatementSha256, licensor, licensorContact};
       }
 
       async function postJson(endpoint, body) {
@@ -503,6 +516,17 @@
         }
 
         return {ok: response.ok, payload: payload};
+      }
+
+      async function sha256Hex(value) {
+        if (!window.crypto || !window.crypto.subtle || typeof TextEncoder === 'undefined') {
+          throw new PageError('Webbläsaren kan inte verifiera kvittot kryptografiskt. Använd en modern webbläsare.');
+        }
+        const bytes = new TextEncoder().encode(value);
+        const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+        return Array.from(new Uint8Array(digest), function(byte) {
+          return byte.toString(16).padStart(2, '0');
+        }).join('');
       }
 
       function updateDownload() {
@@ -540,7 +564,7 @@
           loadedEula = eula;
           eulaText.textContent = eula.eula;
           eulaMeta.textContent = 'BASx ' + eula.releaseVersion + ' · Licensversion ' + eula.eulaVersion + ' · ' + eula.licensor + ' · ' + eula.licensorContact;
-          acceptanceLabel.textContent = 'Jag har läst och accepterar BASX Proprietary Commercial Software License, version ' + eula.eulaVersion + ', för ' + (access.licensee || access.name) + '. Om jag accepterar för en organisation intygar jag att jag har behörighet att binda organisationen.';
+          acceptanceLabel.textContent = eula.acceptanceStatement;
           downloadButton.firstChild.textContent = 'Acceptera och ladda ner BASx ' + eula.releaseVersion + ' ';
           downloadNote.textContent = 'Godkännandet — namn, nyckel-ID, versioner och tid — sparas innan exakt BASx ' + eula.releaseVersion + ' hämtas. Hämtningen startar ingen provperiod.';
           primaryMessage.textContent = 'Hej ' + access.name + '!';
@@ -570,6 +594,9 @@
             eula_version: loadedEula.eulaVersion,
             eula_sha256: loadedEula.eulaSha256,
             statement_version: loadedEula.statementVersion,
+            acceptance_statement_sha256: loadedEula.acceptanceStatementSha256,
+            identity_confirmed: true,
+            authority_confirmed: true,
             accepted: true
           });
           const payload = normalizeObject(response.payload);
@@ -581,7 +608,27 @@
           if (suppliedDownloadUrl === '' || parsedDownloadUrl.origin !== API_ORIGIN) {
             throw new PageError('Servern gav en ogiltig nedladdningsadress.');
           }
-          downloadNote.textContent = 'Godkännandet är registrerat. Hämtningen startar nu.';
+          const receiptJson = typeof payload['receipt_json'] === 'string' ? payload['receipt_json'] : '';
+          const receiptSha256 = typeof payload['receipt_sha256'] === 'string' ? payload['receipt_sha256'].trim().toLowerCase() : '';
+          let receipt;
+          try {
+            receipt = JSON.parse(receiptJson);
+          } catch (_) {
+            throw new PageError('Godkännandet registrerades, men servern gav inget giltigt kvitto. Kontakta licensgivaren innan du fortsätter.');
+          }
+          if (receipt === null || typeof receipt !== 'object' || Array.isArray(receipt) || !/^[0-9a-f]{64}$/.test(receiptSha256)) {
+            throw new PageError('Godkännandet registrerades, men servern gav inget giltigt kvitto. Kontakta licensgivaren innan du fortsätter.');
+          }
+          if (await sha256Hex(receiptJson) !== receiptSha256) {
+            throw new PageError('Godkännandekvittots kontrollsumma stämmer inte. Kontakta licensgivaren innan du fortsätter.');
+          }
+          const acceptanceId = typeof receipt['acceptance_id'] === 'string' ? receipt['acceptance_id'] : 'acceptance';
+          const receiptBlob = new Blob([receiptJson], {type: 'application/json;charset=utf-8'});
+          receiptLink.href = URL.createObjectURL(receiptBlob);
+          receiptLink.download = 'BASx-acceptance-' + acceptanceId.replace(/[^A-Za-z0-9._-]/g, '_') + '.json';
+          receiptLink.textContent = 'Spara kvitto på godkännandet · SHA-256 ' + receiptSha256;
+          receiptLink.hidden = false;
+          downloadNote.textContent = 'Godkännandet är registrerat och kvittot är klart. Hämtningen startar nu.';
           window.location.assign(parsedDownloadUrl.href);
         } catch (error) {
           accepting = false;
