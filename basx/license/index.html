@@ -257,19 +257,44 @@
     dialog::backdrop { background: rgba(10, 30, 36, .72); }
     .modal-content { padding: clamp(1.5rem, 5vw, 2.5rem); }
     .modal-content h3 { font-size: clamp(1.55rem, 4vw, 2.1rem); letter-spacing: -.04em; line-height: 1.1; }
+    .modal-message { color: var(--soft); font-size: 1.04rem; line-height: 1.7; }
 
     .activation-code {
+      display: grid;
+      width: 100%;
+      gap: .45rem;
       margin: 1.4rem 0;
-      padding: 1rem;
+      padding: 1.2rem 1rem 1rem;
       border: 2px solid var(--ink);
       border-radius: 14px;
+      color: var(--ink);
       background: #f5f3ed;
-      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-      font-size: clamp(1.15rem, 4vw, 1.65rem);
-      font-weight: 850;
-      letter-spacing: .08em;
+      cursor: pointer;
       text-align: center;
+    }
+
+    .activation-code-value {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: clamp(1.45rem, 6vw, 2.2rem);
+      font-weight: 850;
+      letter-spacing: .065em;
       user-select: all;
+    }
+
+    .copy-label {
+      color: var(--green);
+      font-size: .82rem;
+      font-weight: 850;
+      letter-spacing: .02em;
+    }
+
+    .modal-actions { display: grid; gap: .75rem; margin-top: 1.4rem; }
+    .modal-actions .button { display: grid; place-items: center; margin-top: 0; text-decoration: none; }
+    .button.secondary {
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: transparent;
+      box-shadow: none;
     }
 
     @media (max-width: 580px) {
@@ -303,7 +328,7 @@
         <div class="profile" id="profile-section" hidden>
           <div class="profile-intro">
             <h4>Kontaktuppgifter för licensinnehavaren</h4>
-            <p>Uppgifterna lämnas direkt till BASx licensserver. Skicka dem inte via chatt eller kommandorad.</p>
+            <p>Fyll i uppgifterna här. De skickas direkt till BASx licensserver och behöver inte lämnas till assistenten.</p>
           </div>
           <label class="field">Namn
             <input id="profile-name" autocomplete="name" maxlength="200" required>
@@ -339,14 +364,23 @@
     </div>
   </main>
 
-  <dialog id="activation-modal">
+  <dialog id="success-modal" aria-labelledby="success-title">
     <div class="modal-content">
-      <p class="eyebrow">Aktivera BASx</p>
-      <h3>This is your activation code, keep it a secret.</h3>
-      <p>Ge koden till AI-assistenten som hjälper dig med BASx. Koden gäller hela licensen och kan aktivera flera seats upp till licensens gräns.</p>
-      <div class="activation-code" id="activation-code"></div>
-      <p id="download-explanation">BASx hämtas när du fortsätter.</p>
-      <button class="button" id="activation-continue" type="button">Jag har sparat koden — fortsätt</button>
+      <p class="eyebrow" id="success-eyebrow">Nästa steg</p>
+      <h3 id="success-title">Klart.</h3>
+      <p class="modal-message" id="success-message"></p>
+      <div id="activation-section" hidden>
+        <button class="activation-code" id="copy-activation-code" type="button">
+          <span class="activation-code-value" id="activation-code"></span>
+          <span class="copy-label" id="copy-label">Kopiera aktiveringskoden</span>
+        </button>
+        <p class="modal-message" id="activation-explanation"></p>
+      </div>
+      <p class="modal-message" id="download-explanation" hidden></p>
+      <div class="modal-actions">
+        <a class="button" id="download-button" href="#" hidden>Hämta BASx</a>
+        <button class="button secondary" id="modal-close" type="button">Stäng</button>
+      </div>
     </div>
   </dialog>
 
@@ -379,10 +413,18 @@
       const completeButton = document.getElementById('complete-button');
       const completionNote = document.getElementById('completion-note');
       const receiptLink = document.getElementById('receipt-link');
-      const activationModal = document.getElementById('activation-modal');
+      const successModal = document.getElementById('success-modal');
+      const successEyebrow = document.getElementById('success-eyebrow');
+      const successTitle = document.getElementById('success-title');
+      const successMessage = document.getElementById('success-message');
+      const activationSection = document.getElementById('activation-section');
+      const copyActivationCode = document.getElementById('copy-activation-code');
       const activationCode = document.getElementById('activation-code');
-      const activationContinue = document.getElementById('activation-continue');
+      const copyLabel = document.getElementById('copy-label');
+      const activationExplanation = document.getElementById('activation-explanation');
       const downloadExplanation = document.getElementById('download-explanation');
+      const downloadButton = document.getElementById('download-button');
+      const modalClose = document.getElementById('modal-close');
 
       class PageError extends Error {}
 
@@ -397,7 +439,7 @@
       let accessState = null;
       let eulaState = null;
       let completing = false;
-      let pendingDownload = '';
+      let completed = false;
 
       function externalString(value) {
         return typeof value === 'string' ? value.trim() : '';
@@ -499,6 +541,10 @@
           completeButton.disabled = true;
           return;
         }
+        if (completed) {
+          completeButton.disabled = false;
+          return;
+        }
         const eulaValid = !accessState.requirements.eulaAcceptance || acceptance.checked;
         completeButton.disabled = completing || !profileValid() || !eulaValid;
       }
@@ -586,7 +632,64 @@
         receiptLink.hidden = false;
       }
 
+      function openSuccessModal() {
+        if (!successModal.open) {
+          successModal.showModal();
+        }
+      }
+
+      function configureUpdateSuccess() {
+        successEyebrow.textContent = 'Licensen är klar';
+        successTitle.textContent = 'Återgå till BASx.';
+        successMessage.textContent = 'Be BASx att uppgradera igen. Assistenten kontrollerar licensen och fortsätter därifrån.';
+        activationSection.hidden = true;
+        downloadExplanation.hidden = true;
+        downloadButton.hidden = true;
+      }
+
+      function configureInviteSuccess(code, download) {
+        successEyebrow.textContent = 'Aktivera BASx';
+        successTitle.textContent = 'Spara aktiveringskoden.';
+        successMessage.textContent = 'Kopiera koden och ge den till BASx-assistenten som hjälper dig. Assistenten aktiverar licensen och fortsätter installationen.';
+        activationCode.textContent = code;
+        copyLabel.textContent = 'Kopiera aktiveringskoden';
+        activationExplanation.textContent = 'Koden gäller hela licensen och kan användas för lediga seats. Håll den hemlig — den visas inte igen efter att sidan stängts.';
+        activationSection.hidden = false;
+        downloadExplanation.textContent = 'Vill du hämta installationspaketet själv kan du göra det här. Spara aktiveringskoden först.';
+        downloadExplanation.hidden = false;
+        downloadButton.href = download;
+        downloadButton.hidden = false;
+      }
+
+      async function copyCode() {
+        const code = activationCode.textContent.trim();
+        if (code === '') {
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(code);
+        } catch (_) {
+          const field = document.createElement('textarea');
+          field.value = code;
+          field.setAttribute('readonly', '');
+          field.style.position = 'fixed';
+          field.style.opacity = '0';
+          document.body.appendChild(field);
+          field.select();
+          document.execCommand('copy');
+          field.remove();
+        }
+        copyLabel.textContent = 'Kopierad';
+        window.setTimeout(function() {
+          copyLabel.textContent = 'Kopiera aktiveringskoden';
+        }, 1800);
+      }
+
       completeButton.addEventListener('click', async function() {
+        if (completed) {
+          openSuccessModal();
+          return;
+        }
         if (accessState === null || completing || !profileValid()) {
           return;
         }
@@ -629,15 +732,16 @@
             if (download === '' || parsedDownload.origin !== API_ORIGIN) {
               throw new PageError('Licensen sparades, men servern gav ingen giltig hämtningsadress.');
             }
-            pendingDownload = parsedDownload.href;
-            activationCode.textContent = code;
-            downloadExplanation.textContent = 'BASx hämtas när du fortsätter. Aktiveringskoden visas inte igen.';
-            activationModal.showModal();
-            completionNote.textContent = 'Licensen är klar. Spara den hemliga aktiveringskoden.';
+            configureInviteSuccess(code, parsedDownload.href);
           } else {
-            completeButton.disabled = true;
-            completionNote.textContent = 'Klart. Återgå till AI-assistenten och be den köra `basxcli licence refresh --json`. Ingen uppgradering har hämtats eller installerats.';
+            configureUpdateSuccess();
           }
+          completed = true;
+          completing = false;
+          completeButton.textContent = 'Visa nästa steg';
+          completionNote.textContent = 'Klart. Öppna nästa steg när du vill fortsätta.';
+          updateButton();
+          openSuccessModal();
         } catch (error) {
           completing = false;
           updateButton();
@@ -649,10 +753,9 @@
         field.addEventListener('input', updateButton);
       });
       acceptance.addEventListener('change', updateButton);
-      activationContinue.addEventListener('click', function() {
-        if (pendingDownload !== '') {
-          window.location.assign(pendingDownload);
-        }
+      copyActivationCode.addEventListener('click', copyCode);
+      modalClose.addEventListener('click', function() {
+        successModal.close();
       });
 
       initialize();
