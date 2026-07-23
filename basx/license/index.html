@@ -290,12 +290,6 @@
 
     .modal-actions { display: grid; gap: .75rem; margin-top: 1.4rem; }
     .modal-actions .button { display: grid; place-items: center; margin-top: 0; text-decoration: none; }
-    .button.secondary {
-      border: 1px solid var(--line);
-      color: var(--ink);
-      background: transparent;
-      box-shadow: none;
-    }
 
     @media (max-width: 580px) {
       .shell { width: min(100% - 28px, 940px); padding-top: 48px; }
@@ -354,7 +348,7 @@
             <input id="accept-eula" type="checkbox">
             <span id="acceptance-label">Jag har läst och accepterar licensvillkoren för BASx.</span>
           </label>
-          <button class="button" id="complete-button" type="button" disabled>Spara</button>
+          <button class="button" id="complete-button" type="button" disabled>Skicka in och fortsätt</button>
           <p class="small-note" id="completion-note">Nyckeln och uppgifterna verifieras av BASx licensserver.</p>
           <a class="receipt" id="receipt-link" href="#" hidden>Spara kvitto på godkännandet</a>
         </div>
@@ -366,7 +360,7 @@
 
   <dialog id="success-modal" aria-labelledby="success-title">
     <div class="modal-content">
-      <p class="eyebrow" id="success-eyebrow">Nästa steg</p>
+      <p class="eyebrow" id="success-eyebrow">Klart</p>
       <h3 id="success-title">Klart.</h3>
       <p class="modal-message" id="success-message"></p>
       <div id="activation-section" hidden>
@@ -379,7 +373,6 @@
       <p class="modal-message" id="download-explanation" hidden></p>
       <div class="modal-actions">
         <a class="button" id="download-button" href="#" hidden>Hämta BASx</a>
-        <button class="button secondary" id="modal-close" type="button">Stäng</button>
       </div>
     </div>
   </dialog>
@@ -424,7 +417,6 @@
       const activationExplanation = document.getElementById('activation-explanation');
       const downloadExplanation = document.getElementById('download-explanation');
       const downloadButton = document.getElementById('download-button');
-      const modalClose = document.getElementById('modal-close');
 
       class PageError extends Error {}
 
@@ -567,16 +559,14 @@
         if (requirements.profileDetails && requirements.eulaAcceptance) {
           cardTitle.textContent = accessState.alphaOnboarding ? 'Fyll i uppgifterna och godkänn villkoren.' : 'Komplettera uppgifterna och godkänn de nya villkoren.';
           cardDescription.textContent = 'Båda delarna måste sparas tillsammans innan licensen är klar.';
-          completeButton.textContent = accessState.alphaOnboarding ? 'Acceptera och gör BASx klart' : 'Acceptera och spara';
         } else if (requirements.profileDetails) {
           cardTitle.textContent = 'Komplettera kontaktuppgifterna.';
           cardDescription.textContent = 'Villkoren är redan accepterade. Bara de saknade uppgifterna behöver sparas.';
-          completeButton.textContent = 'Spara uppgifter';
         } else {
           cardTitle.textContent = 'Läs och godkänn de nya villkoren.';
           cardDescription.textContent = 'Kontaktuppgifterna är kompletta. Bara den nya EULA-versionen behöver godkännas.';
-          completeButton.textContent = 'Acceptera och spara';
         }
+        completeButton.textContent = 'Skicka in och fortsätt';
         completionNote.textContent = accessState.alphaOnboarding
           ? 'Uppgifterna och godkännandet sparas innan BASx kan hämtas och aktiveras.'
           : 'Detta sparar bara licensuppgifterna. Ingen uppgradering hämtas eller installeras.';
@@ -738,8 +728,7 @@
           }
           completed = true;
           completing = false;
-          completeButton.textContent = 'Visa nästa steg';
-          completionNote.textContent = 'Klart. Öppna nästa steg när du vill fortsätta.';
+          completionNote.textContent = 'Klart. Knappen öppnar resultatet igen.';
           updateButton();
           openSuccessModal();
         } catch (error) {
@@ -754,8 +743,8 @@
       });
       acceptance.addEventListener('change', updateButton);
       copyActivationCode.addEventListener('click', copyCode);
-      modalClose.addEventListener('click', function() {
-        successModal.close();
+      successModal.addEventListener('cancel', function(event) {
+        event.preventDefault();
       });
 
       initialize();
