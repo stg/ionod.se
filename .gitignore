@@ -3,3 +3,10 @@ ionod-mobile-check*.png
 ionod-mobile-menu-check*.png
 old-*
 **/old-*
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
