@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f7f5ef">
+  <title>BASx licens</title>
+  <style>
+    :root {
+      --ink: #132b35;
+      --soft: #526970;
+      --paper: #f7f5ef;
+      --white: #fffefb;
+      --mint: #d9f2df;
+      --lime: #c8f35b;
+      --orange: #ff955a;
+      --line: #d9dfd8;
+      --green: #37765a;
+      --shadow: 0 24px 70px rgba(16, 45, 53, .14);
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 88% 12%, rgba(217, 242, 223, .9) 0 12rem, transparent 12.1rem),
+        radial-gradient(circle at 7% 93%, rgba(255, 149, 90, .12) 0 10rem, transparent 10.1rem),
+        var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button, input, textarea { font: inherit; }
+
+    .shell {
+      width: min(100% - 40px, 940px);
+      margin: 0 auto;
+      padding: clamp(54px, 10vh, 110px) 0 70px;
+    }
+
+    h1, h2, h3, h4, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      letter-spacing: -.075em;
+      line-height: .92;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: .75rem;
+      font-size: clamp(3.1rem, 10vw, 6.9rem);
+    }
+
+    .brand img {
+      width: .72em;
+      height: .72em;
+      object-fit: contain;
+    }
+
+    .mode {
+      display: block;
+      margin-top: .06em;
+      color: var(--green);
+      font-size: clamp(2.5rem, 7vw, 4.7rem);
+      font-weight: 760;
+    }
+
+    .message {
+      max-width: 800px;
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 2.65rem);
+      letter-spacing: -.045em;
+      line-height: 1.08;
+    }
+
+    .message[aria-busy="true"]::after {
+      display: inline-block;
+      width: .27em;
+      height: .27em;
+      margin-left: .38em;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: .48em 0 0 rgba(255, 149, 90, .52), .96em 0 0 rgba(255, 149, 90, .22);
+      content: "";
+      vertical-align: .18em;
+    }
+
+    .content { margin-top: 2rem; }
+    .access { color: var(--green); font-size: 1.3rem; font-weight: 800; }
+    .note { max-width: 760px; margin-bottom: 2.6rem; color: var(--soft); line-height: 1.75; }
+    .note strong { color: var(--ink); }
+
+    .card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .heading {
+      padding: clamp(1.5rem, 4vw, 2.25rem);
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(217, 242, 223, .64), rgba(255, 254, 251, .42));
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: .58rem;
+      margin-bottom: .65rem;
+      color: var(--green);
+      font-size: .75rem;
+      font-weight: 850;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: .58rem;
+      height: .58rem;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 0 4px rgba(200, 243, 91, .24);
+      content: "";
+    }
+
+    .heading h3 {
+      margin-bottom: .45rem;
+      font-size: clamp(1.6rem, 4vw, 2.25rem);
+      letter-spacing: -.05em;
+      line-height: 1.08;
+    }
+
+    .heading p:last-child { margin-bottom: 0; color: var(--soft); }
+
+    .profile {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      padding: clamp(1.35rem, 4vw, 2.25rem);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .profile-intro { grid-column: 1 / -1; }
+    .profile-intro h4 { margin-bottom: .3rem; font-size: 1.2rem; }
+    .profile-intro p { margin: 0; color: var(--soft); font-size: .87rem; }
+
+    .field {
+      display: grid;
+      gap: .4rem;
+      color: var(--soft);
+      font-size: .82rem;
+      font-weight: 750;
+    }
+
+    .wide { grid-column: 1 / -1; }
+
+    .field input, .field textarea {
+      width: 100%;
+      border: 1px solid #b9c5c1;
+      border-radius: 10px;
+      padding: .75rem .85rem;
+      color: var(--ink);
+      background: white;
+      font-weight: 500;
+    }
+
+    .field textarea { min-height: 7rem; resize: vertical; }
+
+    .field input:focus, .field textarea:focus {
+      border-color: var(--green);
+      outline: 3px solid rgba(55, 118, 90, .16);
+    }
+
+    .eula {
+      max-height: min(48vh, 440px);
+      margin: 0;
+      overflow: auto;
+      padding: clamp(1.35rem, 4vw, 2.25rem);
+      border-bottom: 1px solid var(--line);
+      color: #304950;
+      background: #fbfaf6;
+      font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+      font-size: .87rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .eula-meta {
+      margin: 0;
+      padding: .8rem clamp(1.35rem, 4vw, 2.25rem);
+      border-bottom: 1px solid var(--line);
+      color: var(--soft);
+      background: #f5f3ed;
+      font-size: .78rem;
+    }
+
+    .completion { padding: clamp(1.35rem, 4vw, 2.25rem); }
+
+    .check {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: .8rem;
+      align-items: start;
+      font-weight: 720;
+      cursor: pointer;
+    }
+
+    .check input { width: 22px; height: 22px; accent-color: var(--ink); }
+
+    .button {
+      width: 100%;
+      min-height: 54px;
+      margin-top: 1.3rem;
+      border: 0;
+      border-radius: 999px;
+      color: white;
+      background: var(--ink);
+      box-shadow: 0 11px 24px rgba(18, 44, 53, .2);
+      cursor: pointer;
+      font-weight: 820;
+    }
+
+    .button:disabled { box-shadow: none; cursor: not-allowed; opacity: .38; }
+    .small-note { margin: .8rem 0 0; color: var(--soft); font-size: .79rem; text-align: center; }
+
+    .receipt {
+      display: block;
+      margin: .7rem auto 0;
+      color: var(--green);
+      font-size: .82rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    footer { margin-top: 1.5rem; color: #75878b; font-size: .76rem; }
+
+    dialog {
+      width: min(100% - 32px, 590px);
+      border: 0;
+      border-radius: 22px;
+      padding: 0;
+      color: var(--ink);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    dialog::backdrop { background: rgba(10, 30, 36, .72); }
+    .modal-content { padding: clamp(1.5rem, 5vw, 2.5rem); }
+    .modal-content h3 { font-size: clamp(1.55rem, 4vw, 2.1rem); letter-spacing: -.04em; line-height: 1.1; }
+
+    .activation-code {
+      margin: 1.4rem 0;
+      padding: 1rem;
+      border: 2px solid var(--ink);
+      border-radius: 14px;
+      background: #f5f3ed;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: clamp(1.15rem, 4vw, 1.65rem);
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-align: center;
+      user-select: all;
+    }
+
+    @media (max-width: 580px) {
+      .shell { width: min(100% - 28px, 940px); padding-top: 48px; }
+      .profile { grid-template-columns: 1fr; }
+      .wide, .profile-intro { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <h1>
+      <span class="brand"><img src="../assets/logo.png" alt=""><span>BASx</span></span>
+      <span class="mode" id="mode-title">licens</span>
+    </h1>
+    <h2 class="message" id="message" aria-live="polite" aria-busy="true">Kontrollerar nyckel…</h2>
+
+    <div class="content" id="content" hidden>
+      <div id="alpha-intro" hidden>
+        <p class="access">Du har fått tillgång till BASx alpha.</p>
+        <p class="note"><strong>Jag hoppas att ni ska trivas ihop — du och BASx.</strong> Ge BASx något verkligt att bita i, prata som du brukar och se vart ni kommer tillsammans. BASx bidrar med verktygen och uthålligheten; du bidrar med erfarenheten och har alltid sista ordet.</p>
+      </div>
+
+      <section class="card" aria-labelledby="card-title">
+        <header class="heading">
+          <p class="eyebrow">BASx licens</p>
+          <h3 id="card-title">Komplettera licensen.</h3>
+          <p id="card-description">Servern visar bara det som behöver göras för den här licensen.</p>
+        </header>
+
+        <div class="profile" id="profile-section" hidden>
+          <div class="profile-intro">
+            <h4>Kontaktuppgifter för licensinnehavaren</h4>
+            <p>Uppgifterna lämnas direkt till BASx licensserver. Skicka dem inte via chatt eller kommandorad.</p>
+          </div>
+          <label class="field">Namn
+            <input id="profile-name" autocomplete="name" maxlength="200" required>
+          </label>
+          <label class="field">E-post
+            <input id="profile-email" type="email" autocomplete="email" maxlength="320" required>
+          </label>
+          <label class="field">Telefon
+            <input id="profile-phone" type="tel" autocomplete="tel" maxlength="80" required>
+          </label>
+          <label class="field wide">Postadress
+            <textarea id="profile-address" autocomplete="street-address" maxlength="1000" required></textarea>
+          </label>
+        </div>
+
+        <div id="eula-section" hidden>
+          <pre class="eula" id="eula-text" tabindex="0"></pre>
+          <p class="eula-meta" id="eula-meta"></p>
+        </div>
+
+        <div class="completion">
+          <label class="check" id="acceptance-row" hidden>
+            <input id="accept-eula" type="checkbox">
+            <span id="acceptance-label">Jag har läst och accepterar licensvillkoren för BASx.</span>
+          </label>
+          <button class="button" id="complete-button" type="button" disabled>Spara</button>
+          <p class="small-note" id="completion-note">Nyckeln och uppgifterna verifieras av BASx licensserver.</p>
+          <a class="receipt" id="receipt-link" href="#" hidden>Spara kvitto på godkännandet</a>
+        </div>
+      </section>
+
+      <footer>© DS prototyp · BASx · Licensbelagd mjukvara</footer>
+    </div>
+  </main>
+
+  <dialog id="activation-modal">
+    <div class="modal-content">
+      <p class="eyebrow">Aktivera BASx</p>
+      <h3>This is your activation code, keep it a secret.</h3>
+      <p>Ge koden till AI-assistenten som hjälper dig med BASx. Koden gäller hela licensen och kan aktivera flera seats upp till licensens gräns.</p>
+      <div class="activation-code" id="activation-code"></div>
+      <p id="download-explanation">BASx hämtas när du fortsätter.</p>
+      <button class="button" id="activation-continue" type="button">Jag har sparat koden — fortsätt</button>
+    </div>
+  </dialog>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const API_ORIGIN = 'https://basx.ionod.se';
+      const ACCESS_ENDPOINT = API_ORIGIN + '/api/license/access';
+      const EULA_ENDPOINT = API_ORIGIN + '/api/license/eula';
+      const COMPLETE_ENDPOINT = API_ORIGIN + '/api/license/complete';
+
+      const message = document.getElementById('message');
+      const content = document.getElementById('content');
+      const modeTitle = document.getElementById('mode-title');
+      const alphaIntro = document.getElementById('alpha-intro');
+      const cardTitle = document.getElementById('card-title');
+      const cardDescription = document.getElementById('card-description');
+      const profileSection = document.getElementById('profile-section');
+      const profileName = document.getElementById('profile-name');
+      const profileEmail = document.getElementById('profile-email');
+      const profilePhone = document.getElementById('profile-phone');
+      const profileAddress = document.getElementById('profile-address');
+      const eulaSection = document.getElementById('eula-section');
+      const eulaText = document.getElementById('eula-text');
+      const eulaMeta = document.getElementById('eula-meta');
+      const acceptanceRow = document.getElementById('acceptance-row');
+      const acceptance = document.getElementById('accept-eula');
+      const acceptanceLabel = document.getElementById('acceptance-label');
+      const completeButton = document.getElementById('complete-button');
+      const completionNote = document.getElementById('completion-note');
+      const receiptLink = document.getElementById('receipt-link');
+      const activationModal = document.getElementById('activation-modal');
+      const activationCode = document.getElementById('activation-code');
+      const activationContinue = document.getElementById('activation-continue');
+      const downloadExplanation = document.getElementById('download-explanation');
+
+      class PageError extends Error {}
+
+      const currentUrl = new URL(window.location.href);
+      const fragment = new URLSearchParams(currentUrl.hash.replace(/^#/, ''));
+      const suppliedKey = fragment.get('key') || currentUrl.searchParams.get('key');
+      const accessKey = suppliedKey === null ? '' : suppliedKey.trim().toUpperCase();
+      currentUrl.hash = '';
+      currentUrl.searchParams.delete('key');
+      window.history.replaceState(null, '', currentUrl.pathname + currentUrl.search);
+
+      let accessState = null;
+      let eulaState = null;
+      let completing = false;
+      let pendingDownload = '';
+
+      function externalString(value) {
+        return typeof value === 'string' ? value.trim() : '';
+      }
+
+      function externalObject(value) {
+        if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+          throw new PageError('Servern gav ett oväntat svar. Försök igen senare.');
+        }
+        return value;
+      }
+
+      function normalizeRequirements(value) {
+        const raw = externalObject(value);
+        return {
+          profileDetails: raw['profile_details'] === true,
+          eulaAcceptance: raw['eula_acceptance'] === true
+        };
+      }
+
+      function normalizeAccess(value) {
+        const raw = externalObject(value);
+        const error = externalString(raw['error']);
+        const name = externalString(raw['name']);
+        const flow = externalString(raw['flow']);
+        const completion = externalString(raw['completion']);
+        if (error !== '') {
+          throw new PageError(error);
+        }
+        if (name === '' || (flow !== 'invite' && flow !== 'update')) {
+          throw new PageError('Licensnyckeln gav ett ofullständigt svar.');
+        }
+        return {
+          name: name,
+          flow: flow,
+          completion: completion,
+          alphaOnboarding: raw['alpha_onboarding'] === true,
+          requirements: normalizeRequirements(raw['requirements'])
+        };
+      }
+
+      function normalizeEula(value) {
+        const raw = externalObject(value);
+        const result = {
+          text: typeof raw['eula'] === 'string' ? raw['eula'] : '',
+          releaseVersion: externalString(raw['release_version']),
+          artifactSHA256: externalString(raw['artifact_sha256']),
+          eulaVersion: externalString(raw['eula_version']),
+          eulaSHA256: externalString(raw['eula_sha256']),
+          statementVersion: Number(raw['statement_version']),
+          statement: typeof raw['acceptance_statement'] === 'string' ? raw['acceptance_statement'] : '',
+          statementSHA256: externalString(raw['acceptance_statement_sha256']),
+          licensor: externalString(raw['licensor']),
+          licensorContact: externalString(raw['licensor_contact'])
+        };
+        if (result.text.trim() === '' || result.releaseVersion === '' || result.eulaVersion === '' ||
+            !Number.isInteger(result.statementVersion) || !/^[0-9a-f]{64}$/i.test(result.artifactSHA256) ||
+            !/^[0-9a-f]{64}$/i.test(result.eulaSHA256) || !/^[0-9a-f]{64}$/i.test(result.statementSHA256)) {
+          throw new PageError('Licensvillkoren är inte tillgängliga just nu.');
+        }
+        return result;
+      }
+
+      async function postJson(endpoint, body) {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+          body: JSON.stringify(body),
+          credentials: 'omit'
+        });
+        let payload;
+        try {
+          payload = await response.json();
+        } catch (_) {
+          throw new PageError('Servern gav ett oväntat svar. Försök igen senare.');
+        }
+        return {ok: response.ok, payload: externalObject(payload)};
+      }
+
+      async function sha256Hex(value) {
+        const bytes = new TextEncoder().encode(value);
+        const digest = await window.crypto.subtle.digest('SHA-256', bytes);
+        return Array.from(new Uint8Array(digest), function(byte) {
+          return byte.toString(16).padStart(2, '0');
+        }).join('');
+      }
+
+      function profileValid() {
+        if (accessState === null || !accessState.requirements.profileDetails) {
+          return true;
+        }
+        return profileName.value.trim() !== '' && profileEmail.validity.valid &&
+          profileEmail.value.trim() !== '' && profilePhone.value.trim() !== '' &&
+          profileAddress.value.trim() !== '';
+      }
+
+      function updateButton() {
+        if (accessState === null) {
+          completeButton.disabled = true;
+          return;
+        }
+        const eulaValid = !accessState.requirements.eulaAcceptance || acceptance.checked;
+        completeButton.disabled = completing || !profileValid() || !eulaValid;
+      }
+
+      function showError(text) {
+        message.textContent = text;
+        message.setAttribute('aria-busy', 'false');
+      }
+
+      function configurePage() {
+        const requirements = accessState.requirements;
+        alphaIntro.hidden = !accessState.alphaOnboarding;
+        modeTitle.textContent = accessState.alphaOnboarding ? 'stängd alpha' : 'licens';
+        profileSection.hidden = !requirements.profileDetails;
+        eulaSection.hidden = !requirements.eulaAcceptance;
+        acceptanceRow.hidden = !requirements.eulaAcceptance;
+        profileName.value = requirements.profileDetails ? accessState.name : '';
+        profileName.readOnly = requirements.profileDetails;
+
+        if (requirements.profileDetails && requirements.eulaAcceptance) {
+          cardTitle.textContent = accessState.alphaOnboarding ? 'Fyll i uppgifterna och godkänn villkoren.' : 'Komplettera uppgifterna och godkänn de nya villkoren.';
+          cardDescription.textContent = 'Båda delarna måste sparas tillsammans innan licensen är klar.';
+          completeButton.textContent = accessState.alphaOnboarding ? 'Acceptera och gör BASx klart' : 'Acceptera och spara';
+        } else if (requirements.profileDetails) {
+          cardTitle.textContent = 'Komplettera kontaktuppgifterna.';
+          cardDescription.textContent = 'Villkoren är redan accepterade. Bara de saknade uppgifterna behöver sparas.';
+          completeButton.textContent = 'Spara uppgifter';
+        } else {
+          cardTitle.textContent = 'Läs och godkänn de nya villkoren.';
+          cardDescription.textContent = 'Kontaktuppgifterna är kompletta. Bara den nya EULA-versionen behöver godkännas.';
+          completeButton.textContent = 'Acceptera och spara';
+        }
+        completionNote.textContent = accessState.alphaOnboarding
+          ? 'Uppgifterna och godkännandet sparas innan BASx kan hämtas och aktiveras.'
+          : 'Detta sparar bara licensuppgifterna. Ingen uppgradering hämtas eller installeras.';
+        message.textContent = 'Hej ' + accessState.name + '!';
+        message.setAttribute('aria-busy', 'false');
+        content.hidden = false;
+        updateButton();
+      }
+
+      async function initialize() {
+        if (accessKey === '') {
+          showError('Länken saknar en nyckel. Kontrollera att du har öppnat hela länken.');
+          return;
+        }
+        try {
+          const accessResponse = await postJson(ACCESS_ENDPOINT, {'key': accessKey});
+          if (!accessResponse.ok) {
+            throw new PageError(externalString(accessResponse.payload['error']) || 'Licensnyckeln kunde inte verifieras.');
+          }
+          accessState = normalizeAccess(accessResponse.payload);
+          if (accessState.requirements.eulaAcceptance) {
+            message.textContent = 'Hämtar licensvillkoren…';
+            const eulaResponse = await postJson(EULA_ENDPOINT, {'key': accessKey});
+            if (!eulaResponse.ok) {
+              throw new PageError(externalString(eulaResponse.payload['error']) || 'Licensvillkoren kunde inte hämtas.');
+            }
+            eulaState = normalizeEula(eulaResponse.payload);
+            eulaText.textContent = eulaState.text;
+            eulaMeta.textContent = 'BASx ' + eulaState.releaseVersion + ' · Licensversion ' + eulaState.eulaVersion + ' · ' + eulaState.licensor + ' · ' + eulaState.licensorContact;
+            acceptanceLabel.textContent = eulaState.statement;
+          }
+          configurePage();
+        } catch (error) {
+          showError(error instanceof PageError ? error.message : 'BASx licensserver går inte att nå just nu.');
+        }
+      }
+
+      async function prepareReceipt(payload) {
+        const receiptJson = typeof payload['receipt_json'] === 'string' ? payload['receipt_json'] : '';
+        const receiptSHA256 = externalString(payload['receipt_sha256']).toLowerCase();
+        if (receiptJson === '') {
+          return;
+        }
+        if (!/^[0-9a-f]{64}$/.test(receiptSHA256) || await sha256Hex(receiptJson) !== receiptSHA256) {
+          throw new PageError('Godkännandet sparades, men kvittots kontrollsumma stämmer inte. Kontakta licensgivaren.');
+        }
+        const receipt = externalObject(JSON.parse(receiptJson));
+        const acceptanceId = externalString(receipt['acceptance_id']) || 'acceptance';
+        const blob = new Blob([receiptJson], {type: 'application/json;charset=utf-8'});
+        receiptLink.href = URL.createObjectURL(blob);
+        receiptLink.download = 'BASx-acceptance-' + acceptanceId.replace(/[^A-Za-z0-9._-]/g, '_') + '.json';
+        receiptLink.textContent = 'Spara kvitto på godkännandet · SHA-256 ' + receiptSHA256;
+        receiptLink.hidden = false;
+      }
+
+      completeButton.addEventListener('click', async function() {
+        if (accessState === null || completing || !profileValid()) {
+          return;
+        }
+        completing = true;
+        updateButton();
+        completionNote.textContent = 'Sparar licensuppgifterna…';
+        const body = {'key': accessKey};
+        if (accessState.requirements.profileDetails) {
+          body['profile'] = {
+            'name': profileName.value.trim(),
+            'email': profileEmail.value.trim(),
+            'phone': profilePhone.value.trim(),
+            'postal_address': profileAddress.value.trim()
+          };
+        }
+        if (accessState.requirements.eulaAcceptance && eulaState !== null) {
+          body['release_version'] = eulaState.releaseVersion;
+          body['artifact_sha256'] = eulaState.artifactSHA256;
+          body['eula_version'] = eulaState.eulaVersion;
+          body['eula_sha256'] = eulaState.eulaSHA256;
+          body['statement_version'] = eulaState.statementVersion;
+          body['acceptance_statement_sha256'] = eulaState.statementSHA256;
+          body['identity_confirmed'] = true;
+          body['authority_confirmed'] = true;
+          body['accepted'] = true;
+        }
+        try {
+          const response = await postJson(COMPLETE_ENDPOINT, body);
+          if (!response.ok) {
+            throw new PageError(externalString(response.payload['error']) || 'Licensuppgifterna kunde inte sparas.');
+          }
+          await prepareReceipt(response.payload);
+          if (accessState.flow === 'invite') {
+            const code = externalString(response.payload['activation_code']);
+            const download = externalString(response.payload['download_url']);
+            if (!/^[A-Z2-9]{4}(?:-[A-Z2-9]{4}){3}$/.test(code)) {
+              throw new PageError('Licensen sparades, men aktiveringskoden kunde inte visas. Kontakta licensadministratören.');
+            }
+            const parsedDownload = new URL(download, API_ORIGIN);
+            if (download === '' || parsedDownload.origin !== API_ORIGIN) {
+              throw new PageError('Licensen sparades, men servern gav ingen giltig hämtningsadress.');
+            }
+            pendingDownload = parsedDownload.href;
+            activationCode.textContent = code;
+            downloadExplanation.textContent = 'BASx hämtas när du fortsätter. Aktiveringskoden visas inte igen.';
+            activationModal.showModal();
+            completionNote.textContent = 'Licensen är klar. Spara den hemliga aktiveringskoden.';
+          } else {
+            completeButton.disabled = true;
+            completionNote.textContent = 'Klart. Återgå till AI-assistenten och be den köra `basxcli licence refresh --json`. Ingen uppgradering har hämtats eller installerats.';
+          }
+        } catch (error) {
+          completing = false;
+          updateButton();
+          completionNote.textContent = error instanceof PageError ? error.message : 'BASx licensserver går inte att nå just nu.';
+        }
+      });
+
+      [profileName, profileEmail, profilePhone, profileAddress].forEach(function(field) {
+        field.addEventListener('input', updateButton);
+      });
+      acceptance.addEventListener('change', updateButton);
+      activationContinue.addEventListener('click', function() {
+        if (pendingDownload !== '') {
+          window.location.assign(pendingDownload);
+        }
+      });
+
+      initialize();
+    })();
+  </script>
+</body>
+</html>
