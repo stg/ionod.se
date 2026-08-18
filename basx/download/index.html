@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#f7f5ef">
+  <title>Hämta BASx</title>
+  <style>
+    :root {
+      --ink: #132b35;
+      --soft: #526970;
+      --paper: #f7f5ef;
+      --white: #fffefb;
+      --mint: #d9f2df;
+      --lime: #c8f35b;
+      --orange: #ff955a;
+      --line: #d9dfd8;
+      --green: #37765a;
+      --error: #a53b32;
+      --shadow: 0 24px 70px rgba(16, 45, 53, .14);
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 88% 12%, rgba(217, 242, 223, .9) 0 12rem, transparent 12.1rem),
+        radial-gradient(circle at 7% 93%, rgba(255, 149, 90, .12) 0 10rem, transparent 10.1rem),
+        var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    button, input { font: inherit; }
+
+    .shell {
+      width: min(100% - 40px, 940px);
+      margin: 0 auto;
+      padding: clamp(54px, 10vh, 110px) 0 70px;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      letter-spacing: -.075em;
+      line-height: .92;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: .75rem;
+      font-size: clamp(3.1rem, 10vw, 6.9rem);
+    }
+
+    .brand img {
+      width: .72em;
+      height: .72em;
+      object-fit: contain;
+    }
+
+    .mode {
+      display: block;
+      margin-top: .06em;
+      color: var(--green);
+      font-size: clamp(2.5rem, 7vw, 4.7rem);
+      font-weight: 760;
+    }
+
+    .message {
+      max-width: 800px;
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 2.65rem);
+      letter-spacing: -.045em;
+      line-height: 1.08;
+    }
+
+    .content { margin-top: 2.2rem; }
+
+    .card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .heading {
+      padding: clamp(1.5rem, 4vw, 2.25rem);
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(217, 242, 223, .64), rgba(255, 254, 251, .42));
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: .58rem;
+      margin-bottom: .65rem;
+      color: var(--green);
+      font-size: .75rem;
+      font-weight: 850;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: .58rem;
+      height: .58rem;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 0 4px rgba(200, 243, 91, .24);
+      content: "";
+    }
+
+    .heading h3 {
+      margin-bottom: .45rem;
+      font-size: clamp(1.6rem, 4vw, 2.25rem);
+      letter-spacing: -.05em;
+      line-height: 1.08;
+    }
+
+    .heading p:last-child { margin-bottom: 0; color: var(--soft); }
+
+    .download-form { padding: clamp(1.7rem, 5vw, 3.2rem); }
+
+    .code-fieldset {
+      min-width: 0;
+      margin: 0;
+      border: 0;
+      padding: 0;
+    }
+
+    .code-label {
+      display: block;
+      margin-bottom: 1rem;
+      color: var(--soft);
+      font-size: .82rem;
+      font-weight: 820;
+      letter-spacing: .04em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .code-inputs {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: clamp(.35rem, 1.4vw, .75rem);
+      align-items: center;
+      width: min(100%, 760px);
+      margin: 0 auto;
+    }
+
+    .code-part {
+      min-width: 0;
+      width: 100%;
+      height: clamp(68px, 11vw, 92px);
+      border: 2px solid #aebeba;
+      border-radius: 15px;
+      padding: .35rem .2rem;
+      color: var(--ink);
+      background: #fff;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: clamp(1.35rem, 4vw, 2.35rem);
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-align: center;
+      text-transform: uppercase;
+      caret-color: var(--orange);
+    }
+
+    .code-part:hover { border-color: #7f9690; }
+
+    .code-part:focus {
+      border-color: var(--green);
+      outline: 4px solid rgba(55, 118, 90, .17);
+    }
+
+    .code-part[aria-invalid="true"] {
+      border-color: var(--error);
+      outline-color: rgba(165, 59, 50, .13);
+    }
+
+    .code-part:disabled { color: #6a7a7e; background: #f0f1ed; }
+
+    .separator {
+      color: #7d918b;
+      font-size: clamp(1.3rem, 3.3vw, 2rem);
+      font-weight: 800;
+      user-select: none;
+    }
+
+    .entry-note {
+      max-width: 650px;
+      margin: 1rem auto 0;
+      color: var(--soft);
+      font-size: .83rem;
+      text-align: center;
+    }
+
+    .button {
+      display: grid;
+      place-items: center;
+      width: min(100%, 540px);
+      min-height: 56px;
+      margin: 1.6rem auto 0;
+      border: 0;
+      border-radius: 999px;
+      color: white;
+      background: var(--ink);
+      box-shadow: 0 11px 24px rgba(18, 44, 53, .2);
+      cursor: pointer;
+      font-weight: 820;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .button:disabled { box-shadow: none; cursor: not-allowed; opacity: .38; }
+
+    .status {
+      min-height: 1.5rem;
+      max-width: 680px;
+      margin: 1rem auto 0;
+      color: var(--soft);
+      font-size: .86rem;
+      text-align: center;
+    }
+
+    .status.error { color: var(--error); font-weight: 720; }
+
+    .result {
+      padding: clamp(1.7rem, 5vw, 3rem);
+      border-top: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(217, 242, 223, .42), rgba(255, 254, 251, .15));
+      text-align: center;
+    }
+
+    .result h3 {
+      margin-bottom: .5rem;
+      font-size: clamp(1.55rem, 4vw, 2.15rem);
+      letter-spacing: -.045em;
+    }
+
+    .result p { max-width: 650px; margin-right: auto; margin-left: auto; color: var(--soft); }
+    .result .button { background: var(--green); }
+    .expiry { margin-top: .8rem; font-size: .8rem; }
+    .requirements-link { margin-top: 1.1rem; }
+
+    footer { margin-top: 1.5rem; color: #75878b; font-size: .76rem; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    @media (max-width: 640px) {
+      .shell { width: min(100% - 28px, 940px); padding-top: 48px; }
+      .code-inputs { gap: .28rem; }
+      .code-part { height: 64px; border-radius: 11px; font-size: clamp(1.02rem, 6.1vw, 1.55rem); letter-spacing: .035em; }
+      .separator { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <h1>
+      <span class="brand"><img src="../assets/logo.png" alt=""><span>BASx</span></span>
+      <span class="mode">hämta</span>
+    </h1>
+    <h2 class="message">Hämta BASx med din aktiveringskod.</h2>
+
+    <div class="content">
+      <section class="card" aria-labelledby="card-title">
+        <header class="heading">
+          <p class="eyebrow">BASx licens</p>
+          <h3 id="card-title">Ange aktiveringskoden.</h3>
+          <p>Samma kod kan användas av alla behöriga användare inom licensens antal säten. En hämtning förbrukar inget säte.</p>
+        </header>
+
+        <form class="download-form" id="download-form" novalidate>
+          <fieldset class="code-fieldset">
+            <legend class="sr-only">Aktiveringskod i fyra delar</legend>
+            <label class="code-label" for="code-part-1">Aktiveringskod</label>
+            <div class="code-inputs" id="code-inputs">
+              <input class="code-part" id="code-part-1" aria-label="Aktiveringskod, del 1 av 4" inputmode="text" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="4">
+              <span class="separator" aria-hidden="true">–</span>
+              <input class="code-part" id="code-part-2" aria-label="Aktiveringskod, del 2 av 4" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="4">
+              <span class="separator" aria-hidden="true">–</span>
+              <input class="code-part" id="code-part-3" aria-label="Aktiveringskod, del 3 av 4" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="4">
+              <span class="separator" aria-hidden="true">–</span>
+              <input class="code-part" id="code-part-4" aria-label="Aktiveringskod, del 4 av 4" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="4">
+            </div>
+            <p class="entry-note">Du kan skriva del för del eller klistra in hela koden i valfritt fält. Mellanslag och avskiljare hanteras automatiskt.</p>
+          </fieldset>
+          <button class="button" id="unlock-button" type="submit" disabled>Lås upp hämtningen</button>
+          <p class="status" id="status" role="status" aria-live="polite">Koden skickas säkert till BASx licensserver och sparas inte i webbläsaren.</p>
+        </form>
+
+        <div class="result" id="download-result" hidden>
+          <p class="eyebrow">Hämtningen är klar</p>
+          <h3 id="download-title">BASx kan hämtas.</h3>
+          <p id="download-description"></p>
+          <a class="button" id="download-button" href="#">Hämta BASx</a>
+          <p class="expiry" id="download-expiry"></p>
+        </div>
+
+        <div class="result" id="requirements-result" hidden>
+          <p class="eyebrow">Licensen behöver kompletteras</p>
+          <h3>Slutför licensuppgifterna.</h3>
+          <p id="requirements-description"></p>
+          <a class="button requirements-link" id="requirements-button" href="#">Öppna licenssidan</a>
+        </div>
+      </section>
+
+      <footer>© DS prototyp · BASx · Licensbelagd mjukvara</footer>
+    </div>
+  </main>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const API_ORIGIN = 'https://basx.ionod.se';
+      const ACCESS_ENDPOINT = API_ORIGIN + '/api/license/download-access';
+      const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const form = document.getElementById('download-form');
+      const fields = Array.from(document.querySelectorAll('.code-part'));
+      const unlockButton = document.getElementById('unlock-button');
+      const status = document.getElementById('status');
+      const downloadResult = document.getElementById('download-result');
+      const downloadTitle = document.getElementById('download-title');
+      const downloadDescription = document.getElementById('download-description');
+      const downloadButton = document.getElementById('download-button');
+      const downloadExpiry = document.getElementById('download-expiry');
+      const requirementsResult = document.getElementById('requirements-result');
+      const requirementsDescription = document.getElementById('requirements-description');
+      const requirementsButton = document.getElementById('requirements-button');
+      let submitting = false;
+
+      class PageError extends Error {
+        constructor(message, code, actionUrl) {
+          super(message);
+          this.code = code;
+          this.actionUrl = actionUrl;
+        }
+      }
+
+      function externalString(value) {
+        return typeof value === 'string' ? value.trim() : '';
+      }
+
+      function externalObject(value) {
+        if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+          throw new PageError('Servern gav ett oväntat svar. Försök igen senare.', 'invalid_response', '');
+        }
+        return value;
+      }
+
+      function normalizeCharacters(value) {
+        const normalized = String(value).normalize('NFKC').toUpperCase();
+        let result = '';
+        for (const character of normalized) {
+          if (CODE_ALPHABET.indexOf(character) !== -1) {
+            result += character;
+          }
+        }
+        return result;
+      }
+
+      function codeValue() {
+        return fields.map(function(field) { return field.value; }).join('-');
+      }
+
+      function codeComplete() {
+        return fields.every(function(field) { return field.value.length === 4; });
+      }
+
+      function setInvalid(value) {
+        fields.forEach(function(field) {
+          field.setAttribute('aria-invalid', value ? 'true' : 'false');
+        });
+      }
+
+      function updateButton() {
+        unlockButton.disabled = submitting || !codeComplete();
+      }
+
+      function hideResults() {
+        downloadResult.hidden = true;
+        requirementsResult.hidden = true;
+      }
+
+      function distribute(characters, startField, startOffset) {
+        const slots = fields.map(function(field) {
+          return field.value.padEnd(4, ' ').split('');
+        });
+        let position = startField * 4 + startOffset;
+        for (const character of characters) {
+          if (position >= 16) {
+            break;
+          }
+          slots[Math.floor(position / 4)][position % 4] = character;
+          position += 1;
+        }
+        fields.forEach(function(field, index) {
+          field.value = slots[index].join('').replace(/\s+$/g, '');
+        });
+        const focusPosition = Math.min(position, 15);
+        const focusIndex = Math.floor(focusPosition / 4);
+        const focusOffset = position >= 16 ? 4 : focusPosition % 4;
+        fields[focusIndex].focus();
+        fields[focusIndex].setSelectionRange(focusOffset, focusOffset);
+        setInvalid(false);
+        hideResults();
+        updateButton();
+      }
+
+      fields.forEach(function(field, index) {
+        field.addEventListener('input', function(event) {
+          const clean = normalizeCharacters(field.value);
+          if (clean.length > 4) {
+            field.value = '';
+            distribute(clean, clean.length >= 16 ? 0 : index, 0);
+            return;
+          }
+          field.value = clean;
+          setInvalid(false);
+          hideResults();
+          if (clean.length === 4 && event.inputType !== 'deleteContentBackward' && index < fields.length - 1) {
+            fields[index + 1].focus();
+            fields[index + 1].select();
+          }
+          updateButton();
+        });
+
+        field.addEventListener('paste', function(event) {
+          const pasted = normalizeCharacters(event.clipboardData.getData('text'));
+          if (pasted === '') {
+            event.preventDefault();
+            return;
+          }
+          event.preventDefault();
+          const startField = pasted.length >= 16 ? 0 : index;
+          const startOffset = pasted.length >= 16 ? 0 : (field.selectionStart || 0);
+          if (field.selectionStart !== field.selectionEnd) {
+            field.value = field.value.slice(0, field.selectionStart) + field.value.slice(field.selectionEnd);
+          }
+          distribute(pasted, startField, startOffset);
+        });
+
+        field.addEventListener('keydown', function(event) {
+          const start = field.selectionStart || 0;
+          const end = field.selectionEnd || 0;
+          if (event.key === 'Backspace' && start === 0 && end === 0 && index > 0) {
+            event.preventDefault();
+            const previous = fields[index - 1];
+            previous.focus();
+            previous.setSelectionRange(previous.value.length, previous.value.length);
+            return;
+          }
+          if (event.key === 'ArrowLeft' && start === 0 && end === 0 && index > 0) {
+            event.preventDefault();
+            const previous = fields[index - 1];
+            previous.focus();
+            previous.setSelectionRange(previous.value.length, previous.value.length);
+            return;
+          }
+          if (event.key === 'ArrowRight' && start === field.value.length && end === start && index < fields.length - 1) {
+            event.preventDefault();
+            fields[index + 1].focus();
+            fields[index + 1].setSelectionRange(0, 0);
+          }
+        });
+      });
+
+      async function postCode(code) {
+        const response = await fetch(ACCESS_ENDPOINT, {
+          method: 'POST',
+          headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
+          body: JSON.stringify({'activation_code': code}),
+          credentials: 'omit'
+        });
+        let payload;
+        try {
+          payload = externalObject(await response.json());
+        } catch (error) {
+          if (error instanceof PageError) {
+            throw error;
+          }
+          throw new PageError('Servern gav ett oväntat svar. Försök igen senare.', 'invalid_response', '');
+        }
+        if (!response.ok) {
+          throw new PageError(
+            externalString(payload['error']) || 'Hämtningen kunde inte låsas upp.',
+            externalString(payload['error_code']),
+            externalString(payload['action_url'])
+          );
+        }
+        return payload;
+      }
+
+      function showDownload(payload) {
+        const version = externalString(payload['release_version']);
+        const download = externalString(payload['download_url']);
+        const expires = externalString(payload['download_expires_at']);
+        const parsed = new URL(download, API_ORIGIN);
+        if (version === '' || download === '' || parsed.origin !== API_ORIGIN) {
+          throw new PageError('Servern gav ingen giltig hämtningsadress.', 'invalid_response', '');
+        }
+        downloadTitle.textContent = 'BASx ' + version + ' är redo.';
+        downloadDescription.textContent = 'Hämtningslänken är personlig för detta tillfälle. Själva hämtningen förbrukar inget licenssäte.';
+        downloadButton.href = parsed.href;
+        if (expires !== '') {
+          const expiry = new Date(expires);
+          downloadExpiry.textContent = Number.isNaN(expiry.getTime())
+            ? 'Länken gäller i 15 minuter.'
+            : 'Länken gäller till ' + expiry.toLocaleTimeString('sv-SE', {hour: '2-digit', minute: '2-digit'}) + '.';
+        } else {
+          downloadExpiry.textContent = 'Länken gäller i 15 minuter.';
+        }
+        requirementsResult.hidden = true;
+        downloadResult.hidden = false;
+      }
+
+      function showRequirements(error) {
+        let action;
+        try {
+          action = new URL(error.actionUrl);
+        } catch (_) {
+          action = null;
+        }
+        if (action === null || action.origin !== 'https://ionod.se' || !action.pathname.startsWith('/basx/license/')) {
+          return false;
+        }
+        requirementsDescription.textContent = 'Licensinnehavaren behöver komplettera kontaktuppgifterna eller godkänna de aktuella licensvillkoren innan BASx kan hämtas.';
+        requirementsButton.href = action.href;
+        downloadResult.hidden = true;
+        requirementsResult.hidden = false;
+        return true;
+      }
+
+      function userMessage(error) {
+        if (error.code === 'activation_code_invalid') {
+          return 'Aktiveringskoden känns inte igen. Kontrollera koden och försök igen.';
+        }
+        if (error.code === 'licence_download_denied') {
+          return 'Licensen är inte aktiv för hämtning. Kontakta licensadministratören.';
+        }
+        if (error.code === 'release_unavailable') {
+          return 'BASx kan inte hämtas just nu. Försök igen senare.';
+        }
+        if (error.code === 'invalid_request') {
+          return 'Aktiveringskoden är inte komplett.';
+        }
+        return error.message;
+      }
+
+      form.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        if (submitting || !codeComplete()) {
+          return;
+        }
+        submitting = true;
+        setInvalid(false);
+        hideResults();
+        updateButton();
+        status.classList.remove('error');
+        status.textContent = 'Kontrollerar licensen och förbereder hämtningen…';
+        try {
+          const payload = await postCode(codeValue());
+          fields.forEach(function(field) {
+            field.value = '';
+          });
+          showDownload(payload);
+          status.textContent = 'Klart. Hämtningslänken är tillgänglig nedan.';
+        } catch (error) {
+          const pageError = error instanceof PageError
+            ? error
+            : new PageError('BASx licensserver går inte att nå just nu.', 'network_error', '');
+          const requirementsShown = pageError.code === 'download_requirements_incomplete' && showRequirements(pageError);
+          status.classList.add('error');
+          status.textContent = requirementsShown
+            ? 'Licensen behöver kompletteras innan hämtningen kan låsas upp.'
+            : userMessage(pageError);
+          if (pageError.code === 'activation_code_invalid') {
+            setInvalid(true);
+            fields[0].focus();
+            fields[0].select();
+          }
+        } finally {
+          submitting = false;
+          updateButton();
+        }
+      });
+
+      fields[0].focus({preventScroll: true});
+    })();
+  </script>
+</body>
+</html>
